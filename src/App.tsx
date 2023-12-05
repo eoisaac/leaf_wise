@@ -1,4 +1,5 @@
 /* eslint-disable camelcase */
+import { StatusBar } from '@/components/ui/status-bar'
 import { Routes } from '@/routes'
 import { LoadingScreen } from '@/screens/common/loading-screen'
 import '@/styles/globals.css'
@@ -9,7 +10,6 @@ import {
   Inter_800ExtraBold,
   useFonts,
 } from '@expo-google-fonts/inter'
-import { StatusBar } from 'expo-status-bar'
 import { ActivityIndicator, View } from 'react-native'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
@@ -30,7 +30,7 @@ export const App = () => {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider style={{ flex: 1 }}>
         <View className="flex-1 bg-neutral-50 dark:bg-neutral-950">
-          <StatusBar style="auto" />
+          <StatusBar mode="auto" />
           {!fontsLoaded ? <LoadingScreen /> : <Routes />}
         </View>
       </SafeAreaProvider>
