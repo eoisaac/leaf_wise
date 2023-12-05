@@ -1,6 +1,7 @@
 // Learn more https://docs.expo.io/guides/customizing-metro
 /* eslint-disable @typescript-eslint/no-var-requires */
 const { getDefaultConfig } = require('expo/metro-config');
+const { withNativeWind } = require('nativewind/metro')
 
 /** @type {import('expo/metro-config').MetroConfig} */
 
@@ -22,4 +23,7 @@ if (config) {
   }
 }
 
-module.exports = config;
+module.exports = withNativeWind(config, {
+  input: './src/styles/globals.css',
+  configPath: './tailwind.config.ts',
+})

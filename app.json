@@ -4,6 +4,7 @@
     "assetBundlePatterns": [
       "**/*"
     ],
+    "userInterfaceStyle": "automatic",
     "experiments": {
       "tsconfigPaths": true
     },
