@@ -1,0 +1,12 @@
+{
+  "extends": [
+    "@rocketseat/eslint-config/react"
+  ],
+  "globals": {
+    "JSX": true
+  },
+  "rules": {
+    "camelcase": "off",
+    "no-unused-expressions": "error"
+  }
+}

@@ -1,10 +1,14 @@
 {
   "expo": {
-    "name": "leaf_wise",
-    "slug": "leaf_wise",
-    "version": "1.0.0",
+    "AppEntry": "./src/main.js",
     "assetBundlePatterns": [
       "**/*"
-    ]
+    ],
+    "experiments": {
+      "tsconfigPaths": true
+    },
+    "name": "leaf_wise",
+    "slug": "leaf_wise",
+    "version": "1.0.0"
   }
 }
