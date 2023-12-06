@@ -11,7 +11,7 @@ export const Routes = () => {
   const isDark = colorScheme === 'dark'
 
   return (
-    <View className="flex-1">
+    <View className="flex-1" style={{ flex: 1 }}>
       <NavigationContainer theme={isDark ? DarkTheme : DefaultTheme}>
         <AppRoutes />
       </NavigationContainer>

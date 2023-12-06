@@ -1,9 +1,11 @@
 import { EnvStatusList } from '@/components/env-status-list'
+import { Button } from '@/components/ui/button'
 import { StatusBar } from '@/components/ui/status-bar'
 import { LinearGradient } from 'expo-linear-gradient'
 import { useColorScheme } from 'nativewind'
+import { Gear } from 'phosphor-react-native'
 import { Text, View } from 'react-native'
-import { lime } from 'tailwindcss/colors'
+import { lime, neutral } from 'tailwindcss/colors'
 
 interface HomeHeaderProps {
   onProfilePress?: () => void
@@ -19,20 +21,23 @@ export const HomeHeader = ({ onProfilePress }: HomeHeaderProps) => {
     <View>
       <StatusBar mode="light" />
 
-      <View className="z-50 mt-16 flex-row items-center justify-between px-8">
+      <View
+        className="z-[99] mt-16 flex-row items-center justify-between px-8"
+        style={{ zIndex: 99 }}
+      >
         <View>
-          <Text className="font-bold text-4xl text-neutral-100">
+          <Text className="text-4xl font-bold text-neutral-100">
             Hi, {usernameDisplay}
           </Text>
           <Text className="text-lg text-neutral-100">Manage your plants</Text>
         </View>
-        {/* <Button
+        <Button
           variant="ghost"
           size="icon"
           className="-mr-3"
-          icon={<UserCircle size={32} color={neutral[50]} />}
+          icon={<Gear size={32} color={neutral[50]} />}
           onPress={onProfilePress}
-        /> */}
+        />
       </View>
 
       <View className="z-50 mt-16">
@@ -50,7 +55,12 @@ export const HomeHeader = ({ onProfilePress }: HomeHeaderProps) => {
             : [lime[500], lime[300]]
         }
         className="absolute inset-x-0 top-0 z-20 h-64"
-        style={{ borderBottomLeftRadius: 24, borderBottomRightRadius: 24 }}
+        style={{
+          borderBottomLeftRadius: 24,
+          borderBottomRightRadius: 24,
+          elevation: 1,
+          zIndex: 20,
+        }}
       />
     </View>
   )

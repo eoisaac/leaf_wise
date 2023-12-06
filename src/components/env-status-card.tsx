@@ -32,12 +32,12 @@ export const EnvStatusCard = ({ ...props }: EnvStatusCardProps) => {
         )}
         style={{ elevation: 1 }}
       >
-        <View className="self-start">{props.icon}</View>
+        <View className="ml-1 mt-1 self-start">{props.icon}</View>
         <View className="flex-row">
-          <Text className="font-bold text-5xl text-neutral-900 dark:text-neutral-100">
+          <Text className="text-5xl font-semibold text-neutral-900 dark:text-neutral-100">
             {props.status.value}
           </Text>
-          <Text className="font-bold text-xl text-neutral-500 dark:text-neutral-400">
+          <Text className="text-xl font-bold text-neutral-500 dark:text-neutral-400">
             {props.status.unit}
           </Text>
         </View>

@@ -2,7 +2,6 @@
 import { StatusBar } from '@/components/ui/status-bar'
 import { Routes } from '@/routes'
 import { LoadingScreen } from '@/screens/common/loading-screen'
-import '@/styles/globals.css'
 import {
   Inter_400Regular,
   Inter_600SemiBold,
@@ -29,8 +28,11 @@ export const App = () => {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider style={{ flex: 1 }}>
-        <View className="flex-1 bg-neutral-50 dark:bg-neutral-950">
-          <StatusBar mode="auto" />
+        <View
+          className="flex-1 bg-neutral-50 dark:bg-neutral-950"
+          style={{ flex: 1 }}
+        >
+          <StatusBar mode="light" />
           {!fontsLoaded ? <LoadingScreen /> : <Routes />}
         </View>
       </SafeAreaProvider>

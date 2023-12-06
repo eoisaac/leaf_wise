@@ -3,7 +3,10 @@
     "camelcase",
     "clsx",
     "nativewind",
+    "nozbe",
     "rocketseat",
-    "tailwindcss"
+    "tailwindcss",
+    "uuidv",
+    "watermelondb"
   ]
 }
