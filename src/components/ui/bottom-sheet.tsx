@@ -1,12 +1,15 @@
 import { styled } from 'nativewind'
 import React from 'react'
+import { Text, View } from 'react-native'
 import { Modalize, ModalizeProps, useModalize } from 'react-native-modalize'
 
 type BottomSheetRef = Modalize
 
-interface BottomSheetProps extends ModalizeProps {
+interface BottomSheetHeaderProps {
   title?: string
 }
+
+interface BottomSheetProps extends ModalizeProps, BottomSheetHeaderProps {}
 
 const SheetWrapper = React.forwardRef<BottomSheetRef, BottomSheetProps>(
   (props, ref) => {
@@ -34,12 +37,31 @@ const StyledBottomSheet = styled(SheetWrapper, {
   },
 })
 
+const BottomSheetHeader = ({ title }: BottomSheetHeaderProps) => {
+  return (
+    <View className="mb-6">
+      <Text className="text-center text-xl font-bold text-neutral-900 dark:text-neutral-100">
+        {title}
+      </Text>
+    </View>
+  )
+}
+
 const BottomSheet = React.forwardRef<BottomSheetRef, BottomSheetProps>(
-  ({ adjustToContentHeight = true, ...props }, ref) => {
+  (
+    {
+      title,
+      HeaderComponent = <BottomSheetHeader title={title} />,
+      adjustToContentHeight = true,
+      ...props
+    },
+    ref,
+  ) => {
     return (
       <StyledBottomSheet
         ref={ref}
-        modalStyle="bg-neutral-50 p-8 dark:bg-neutral-900 rounded-t-3xl"
+        HeaderComponent={HeaderComponent}
+        modalStyle="bg-neutral-50 p-8 pb-12 dark:bg-neutral-900 rounded-t-3xl"
         overlayStyle="bg-neutral-950/50"
         handleStyle="h-[6px] w-14 rounded-lg bg-neutral-200 dark:bg-neutral-700"
         adjustToContentHeight={adjustToContentHeight}

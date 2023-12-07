@@ -14,8 +14,10 @@ export const NewMonitorForm = () => {
         name="name"
         render={({ field: { onChange, onBlur, value } }) => {
           return (
-            <View className="gap-0.5">
-              <Text>Monitor name</Text>
+            <View className="space-y-1">
+              <Text className="ml-2 text-lg font-medium text-neutral-500 dark:text-neutral-400">
+                Monitor name
+              </Text>
               <Input
                 placeholder="Monitor name"
                 autoCapitalize="none"
@@ -23,7 +25,9 @@ export const NewMonitorForm = () => {
                 onBlur={onBlur}
                 onChangeText={onChange}
               />
-              <Text>{String(errors.name?.message ?? '')}</Text>
+              <Text className="ml-2 text-xs text-rose-500 dark:text-rose-400">
+                {String(errors.name?.message ?? '')}
+              </Text>
             </View>
           )
         }}
@@ -34,8 +38,10 @@ export const NewMonitorForm = () => {
         name="wifiSsid"
         render={({ field: { onChange, onBlur, value } }) => {
           return (
-            <View className="gap-0.5">
-              <Text>Wifi SSID</Text>
+            <View className="space-y-1">
+              <Text className="ml-2 text-lg font-medium text-neutral-500 dark:text-neutral-400">
+                Wifi SSID
+              </Text>
               <Input
                 placeholder="Wifi SSID"
                 autoCapitalize="none"
@@ -43,7 +49,9 @@ export const NewMonitorForm = () => {
                 onBlur={onBlur}
                 onChangeText={onChange}
               />
-              <Text>{String(errors.wifiSsid?.message ?? '')}</Text>
+              <Text className="ml-2 text-xs text-rose-500 dark:text-rose-400">
+                {String(errors.wifiSsid?.message ?? '')}
+              </Text>
             </View>
           )
         }}
@@ -53,8 +61,10 @@ export const NewMonitorForm = () => {
         name="wifiPassword"
         render={({ field: { onChange, onBlur, value } }) => {
           return (
-            <View className="gap-0.5">
-              <Text>Wifi Password</Text>
+            <View className="space-y-1">
+              <Text className="ml-2 text-lg font-medium text-neutral-500 dark:text-neutral-400">
+                Wifi Password
+              </Text>
               <Input
                 placeholder="Wifi Password"
                 autoCapitalize="none"
@@ -63,7 +73,9 @@ export const NewMonitorForm = () => {
                 onChangeText={onChange}
                 secureTextEntry
               />
-              <Text>{String(errors.wifiPassword?.message ?? '')}</Text>
+              <Text className="ml-2 text-xs text-rose-500 dark:text-rose-400">
+                {String(errors.wifiPassword?.message ?? '')}
+              </Text>
             </View>
           )
         }}

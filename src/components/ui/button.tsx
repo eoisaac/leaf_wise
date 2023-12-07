@@ -8,7 +8,7 @@ import { Text, TouchableOpacity, TouchableOpacityProps } from 'react-native'
 import { lime, neutral } from 'tailwindcss/colors'
 
 const buttonVariants = cva(
-  'rounded-2xl flex-row items-center justify-center border-2 gap-2',
+  'rounded-2xl flex-row items-center justify-center border-2 space-x-2',
   {
     variants: {
       variant: {

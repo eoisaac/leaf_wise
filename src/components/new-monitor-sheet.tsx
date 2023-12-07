@@ -32,20 +32,24 @@ const NewMonitorSheet = React.forwardRef<BottomSheetRef, BottomSheetProps>(
       },
     })
 
+    const handleFormSubmit = async (values: FormValues) => {
+      console.log(values)
+    }
+
     return (
-      <BottomSheet ref={ref} {...props}>
+      <BottomSheet ref={ref} title="New Monitor" {...props}>
         <FormProvider {...form}>
           <NewMonitorForm />
         </FormProvider>
 
-        <View className="item-center flex-row gap-4">
+        <View className="item-center mb-6 mt-4 flex-row space-x-4">
           <Button variant="ghost2" className="flex-1">
             {/* {isFirstStep ? 'Cancel' : 'Back'} */}
             Cancel
           </Button>
           <Button
             className="flex-1"
-            // onPress={form.handleSubmit(handleFormSubmit)}
+            onPress={form.handleSubmit(handleFormSubmit)}
           >
             {/* {isFirstStep ? 'Next' : 'Create'} */}
             Create
