@@ -57,28 +57,34 @@ export const AllMonitorsScreen = ({ navigation }: PreferencesScreenProps) => {
     return () => subscription.unsubscribe()
   }, [])
 
+  const selectMonitor = async (monitor: MonitorModel) => {
+    await monitorRepository.select(monitor.id)
+  }
+
   return (
     <>
       <StackScreen navigation={navigation} name="All monitors">
         <StatusBar mode="auto" />
         <Input placeholder="Search" onChangeText={handleSearchChange} />
 
-        {hasMonitors ? (
-          <FlatList
-            data={filteredMonitors}
-            keyExtractor={(item) => item.id}
-            renderItem={({ item, index }) => (
-              <MonitorCard
-                monitor={item}
-                isSelected={false}
-                isLast={lastCardIndex === index}
-              />
-            )}
-            showsVerticalScrollIndicator={false}
-          />
-        ) : (
-          <NotFoundMessage message="No monitors found" />
-        )}
+        <View className="mt-4 flex-1">
+          {hasMonitors ? (
+            <FlatList
+              data={filteredMonitors}
+              keyExtractor={(item) => item.id}
+              renderItem={({ item, index }) => (
+                <MonitorCard
+                  monitor={item}
+                  isLast={lastCardIndex === index}
+                  onButtonPress={selectMonitor}
+                />
+              )}
+              showsVerticalScrollIndicator={false}
+            />
+          ) : (
+            <NotFoundMessage message="No monitors found" />
+          )}
+        </View>
 
         <View
           className="absolute bottom-8 right-8 rounded-2xl bg-neutral-50 dark:bg-neutral-950"

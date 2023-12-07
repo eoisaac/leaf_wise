@@ -11,7 +11,8 @@ export class MonitorModel extends Model {
   @field('name') name!: string
   @field('wifi_ssid') wifiSSID!: string | null
   @field('wifi_password') wifiPassword!: string | null
-  @field('synced') synced!: boolean
+  @field('is_synced') isSynced!: boolean
+  @field('is_selected') isSelected!: boolean
 
   @readonly @date('created_at') createdAt!: number
   @readonly @date('updated_at') updatedAt!: number

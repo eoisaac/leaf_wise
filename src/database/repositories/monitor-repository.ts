@@ -4,6 +4,7 @@ import {
   UpdateMonitorSchema,
 } from '@/database/schemas/monitor-schema'
 import { watermelonDB } from '@/database/watermelon'
+import { Q } from '@nozbe/watermelondb'
 import { Observable } from '@nozbe/watermelondb/utils/rx'
 
 const TABLE_NAME = 'monitors'
@@ -14,8 +15,8 @@ const create = async (monitor: NewMonitorSchema): Promise<MonitorModel> => {
       data.name = monitor.name
       data.wifiSSID = monitor.wifiSSID
       data.wifiPassword = monitor.wifiPassword
-      data.synced =
-        typeof monitor.synced === 'undefined' ? false : monitor.synced
+      data.isSynced = monitor.isSynced ?? false
+      data.isSelected = monitor.isSelected ?? false
     })
   })
 }
@@ -33,8 +34,8 @@ const update = async (
       data.name = monitor.name
       data.wifiSSID = monitor.wifiSSID
       data.wifiPassword = monitor.wifiPassword
-      data.synced =
-        typeof monitor.synced === 'undefined' ? false : monitor.synced
+      data.isSynced = monitor.isSynced ?? false
+      data.isSelected = monitor.isSelected ?? false
     })
   })
 }
@@ -42,6 +43,27 @@ const update = async (
 const destroy = async (monitor: MonitorModel): Promise<void> => {
   return await watermelonDB.write(async () => {
     return await monitor.destroyPermanently()
+  })
+}
+
+const select = async (monitorId: string): Promise<MonitorModel | null> => {
+  return await watermelonDB.write(async () => {
+    const stored = await watermelonDB
+      .get<MonitorModel>(TABLE_NAME)
+      .query(Q.where('is_selected', true))
+
+    if (stored.length > 0) {
+      await stored[0].update((data) => {
+        data.isSelected = false
+      })
+    }
+
+    const newSelectedMonitor = await watermelonDB
+      .get<MonitorModel>(TABLE_NAME)
+      .find(monitorId)
+    return await newSelectedMonitor.update((data) => {
+      data.isSelected = true
+    })
   })
 }
 
@@ -53,5 +75,6 @@ export const monitorRepository = {
   create,
   update,
   destroy,
+  select,
   observeAll,
 }

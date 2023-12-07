@@ -11,7 +11,6 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import React from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { Text, View } from 'react-native'
-import Animated, { SlideInLeft, SlideInRight } from 'react-native-reanimated'
 import { z } from 'zod'
 
 const NewMonitorSheet = React.forwardRef<BottomSheetRef, BottomSheetProps>(
@@ -56,10 +55,12 @@ const NewMonitorSheet = React.forwardRef<BottomSheetRef, BottomSheetProps>(
 
     const handleConfigureMonitor = async () => {
       console.log('configuring monitor...')
+      handleCancel()
     }
 
     const handleCancel = () => {
       form.reset()
+      setNewMonitor(null)
       handleResetStep()
 
       if (ref && typeof ref !== 'function' && ref.current) {
@@ -70,18 +71,15 @@ const NewMonitorSheet = React.forwardRef<BottomSheetRef, BottomSheetProps>(
     return (
       <BottomSheet ref={ref} title="New Monitor" {...props}>
         {isFirstStep ? (
-          <Animated.View entering={SlideInRight} exiting={SlideInLeft}>
+          <View>
             <FormProvider {...form}>
               <NewMonitorForm />
             </FormProvider>
-          </Animated.View>
+          </View>
         ) : (
-          <Animated.View entering={SlideInRight} exiting={SlideInLeft}>
+          <View>
             <Text className="text-neutral-50">{newMonitor?.id}</Text>
-            <Text className="text-neutral-50">{newMonitor?.name}</Text>
-            <Text className="text-neutral-50">{newMonitor?.wifiSSID}</Text>
-            <Text className="text-neutral-50">{newMonitor?.wifiPassword}</Text>
-          </Animated.View>
+          </View>
         )}
 
         <View className="item-center mb-6 mt-4 flex-row space-x-4">
