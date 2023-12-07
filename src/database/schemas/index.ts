@@ -14,5 +14,14 @@ export const schemas = appSchema({
         { name: 'updated_at', type: 'number' },
       ],
     }),
+    tableSchema({
+      name: 'actuators',
+      columns: [
+        { name: 'name', type: 'string' },
+        { name: 'created_at', type: 'number' },
+        { name: 'updated_at', type: 'number' },
+        { name: 'monitor_id', type: 'string', isIndexed: true },
+      ],
+    }),
   ],
 })

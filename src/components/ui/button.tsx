@@ -23,6 +23,7 @@ const buttonVariants = cva(
         ghost: `bg-transparent border-transparent active:bg-lime-500/10`,
         ghost2: `bg-transparent border-transparent active:bg-neutral-200
         dark:active:bg-neutral-800`,
+        danger: `bg-red-500 border-transparent active:bg-red-600/80`,
       },
       size: {
         default: 'py-3 px-4',
@@ -46,6 +47,7 @@ const buttonTextVariants = cva('text-xl font-medium', {
       link: 'text-lime-400 dark:text-lime-500 underline',
       ghost: 'text-lime-400 dark:text-lime-500',
       ghost2: 'text-neutral-500',
+      danger: 'text-red-50',
     },
     size: {
       default: '',

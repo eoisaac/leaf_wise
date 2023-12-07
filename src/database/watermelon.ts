@@ -1,3 +1,4 @@
+import { ActuatorModel } from '@/database/models/actuator-model'
 import { MonitorModel } from '@/database/models/monitor-model'
 import { schemas } from '@/database/schemas'
 import { Database } from '@nozbe/watermelondb'
@@ -12,7 +13,7 @@ export const adapter = new SQLiteAdapter({
 
 export const watermelonDB = new Database({
   adapter,
-  modelClasses: [MonitorModel],
+  modelClasses: [MonitorModel, ActuatorModel],
 })
 
 setGenerator(() => uuidv4())

@@ -2,6 +2,7 @@ import { PreferencesScreenProps } from '@/@types/routes'
 import { StackScreen } from '@/components/layouts/stack-screen'
 import { MonitorCard } from '@/components/monitor-card'
 import { NewMonitorSheet } from '@/components/new-monitor-sheet'
+import { NotFoundMessage } from '@/components/not-found-message'
 import { RequestPermissionSheet } from '@/components/request-permission-sheet'
 import { useBottomSheet } from '@/components/ui/bottom-sheet'
 import { Button } from '@/components/ui/button'
@@ -12,7 +13,7 @@ import { monitorRepository } from '@/database/repositories/monitor-repository'
 import { checkFineLocationPermission } from '@/utils/permissions'
 import { Plus } from 'phosphor-react-native'
 import React from 'react'
-import { FlatList, Text, View } from 'react-native'
+import { FlatList, View } from 'react-native'
 
 export const AllMonitorsScreen = ({ navigation }: PreferencesScreenProps) => {
   const [monitors, setMonitors] = React.useState<MonitorModel[]>([])
@@ -76,9 +77,7 @@ export const AllMonitorsScreen = ({ navigation }: PreferencesScreenProps) => {
             showsVerticalScrollIndicator={false}
           />
         ) : (
-          <Text className="text-center text-base font-normal text-neutral-500 dark:text-neutral-400">
-            No monitors found
-          </Text>
+          <NotFoundMessage message="No monitors found" />
         )}
 
         <View
