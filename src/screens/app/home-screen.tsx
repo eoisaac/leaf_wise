@@ -15,7 +15,7 @@ export const HomeScreen = ({ navigation }: HomeScreenProps) => {
   const navigateToPreferences = () => navigation.navigate('PreferencesScreen')
 
   return (
-    <View className="relative z-10 flex-1">
+    <View className="relative z-10 flex-1 bg-neutral-50 dark:bg-neutral-950">
       <HomeHeader onButtonPress={navigateToPreferences} />
 
       <View className="mt-8 flex-1 justify-between space-y-8">
@@ -34,7 +34,7 @@ export const HomeScreen = ({ navigation }: HomeScreenProps) => {
               See all
             </Button>
           </View>
-          <Text className="h-16 bg-orange-300">No monitors</Text>
+          {/* <MonitorCard /> */}
         </View>
 
         <View className="flex-1 space-y-6 px-8">
@@ -44,10 +44,10 @@ export const HomeScreen = ({ navigation }: HomeScreenProps) => {
               Actuators
             </Text>
           </View>
-          <View className="flex-1 bg-orange-800" />
+          <View className="flex-1 " />
         </View>
 
-        <View className="items-center pb-2">
+        <View className="items-center pb-3">
           <Text className="text-center text-xs font-medium text-neutral-500 dark:text-neutral-400">
             LeafWise - v{version}
           </Text>

@@ -26,7 +26,7 @@ export const EnvStatusCard = ({ ...props }: EnvStatusCardProps) => {
     >
       <View
         className={mergeTailwind(
-          `mb-1 ml-2 mr-2 h-28 w-28 items-center justify-between rounded-3xl
+          `mb-1 ml-2 mr-2 h-28 w-28 items-center justify-between rounded-2xl
           bg-neutral-100 p-2 dark:bg-neutral-900`,
           { 'ml-8': props.isFirst, 'mr-8': props.isLast },
         )}

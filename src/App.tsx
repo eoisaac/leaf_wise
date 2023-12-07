@@ -9,7 +9,7 @@ import {
   Inter_800ExtraBold,
   useFonts,
 } from '@expo-google-fonts/inter'
-import { ActivityIndicator, View } from 'react-native'
+import { View } from 'react-native'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 
@@ -21,18 +21,14 @@ export const App = () => {
     Inter_800ExtraBold,
   })
 
-  if (!fontsLoaded) {
-    return <ActivityIndicator />
-  }
-
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider style={{ flex: 1 }}>
+        <StatusBar mode="light" />
         <View
           className="flex-1 bg-neutral-50 dark:bg-neutral-950"
           style={{ flex: 1 }}
         >
-          <StatusBar mode="light" />
           {!fontsLoaded ? <LoadingScreen /> : <Routes />}
         </View>
       </SafeAreaProvider>
