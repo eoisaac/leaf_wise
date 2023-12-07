@@ -14,6 +14,17 @@ const create = async (monitor: MonitorModel): Promise<MonitorModel> => {
   })
 }
 
+const update = async (monitor: MonitorModel): Promise<MonitorModel> => {
+  return await watermelonDB.write(async () => {
+    return await monitor.update((data) => {
+      data.name = monitor.name
+      data.wifiSSID = monitor.wifiSSID
+      data.wifiPassword = monitor.wifiPassword
+      data.synced = monitor.synced
+    })
+  })
+}
+
 const destroy = async (monitor: MonitorModel) => {
   return await watermelonDB.write(async () => {
     return await monitor.destroyPermanently()
@@ -26,6 +37,7 @@ const observeAll = async () => {
 
 export const monitorRepository = {
   create,
+  update,
   destroy,
   observeAll,
 }

@@ -8,11 +8,11 @@ import { Text, View } from 'react-native'
 import { lime, neutral } from 'tailwindcss/colors'
 
 interface HomeHeaderProps {
-  onProfilePress?: () => void
+  onButtonPress?: () => void
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const HomeHeader = ({ onProfilePress }: HomeHeaderProps) => {
+export const HomeHeader = ({ onButtonPress }: HomeHeaderProps) => {
   const { colorScheme } = useColorScheme()
 
   const usernameDisplay = 'Isaac'
@@ -36,11 +36,11 @@ export const HomeHeader = ({ onProfilePress }: HomeHeaderProps) => {
           size="icon"
           className="-mr-3"
           icon={<Gear size={32} color={neutral[50]} />}
-          onPress={onProfilePress}
+          onPress={onButtonPress}
         />
       </View>
 
-      <View className="z-50 mt-16">
+      <View className="z-50 mt-16" style={{ zIndex: 50 }}>
         <EnvStatusList />
       </View>
 
