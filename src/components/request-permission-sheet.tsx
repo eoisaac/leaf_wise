@@ -40,5 +40,4 @@ const RequestPermissionSheet = React.forwardRef<
 })
 
 RequestPermissionSheet.displayName = 'RequestPermissionSheet'
-
 export { RequestPermissionSheet }

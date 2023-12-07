@@ -35,7 +35,7 @@ export const NewMonitorForm = () => {
 
       <Controller
         control={form.control}
-        name="wifiSsid"
+        name="wifiSSID"
         render={({ field: { onChange, onBlur, value } }) => {
           return (
             <View className="space-y-1">
@@ -50,7 +50,7 @@ export const NewMonitorForm = () => {
                 onChangeText={onChange}
               />
               <Text className="ml-2 text-xs text-rose-500 dark:text-rose-400">
-                {String(errors.wifiSsid?.message ?? '')}
+                {String(errors.wifiSSID?.message ?? '')}
               </Text>
             </View>
           )

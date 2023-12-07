@@ -1,67 +1,101 @@
 import { PreferencesScreenProps } from '@/@types/routes'
 import { StackScreen } from '@/components/layouts/stack-screen'
+import { MonitorCard } from '@/components/monitor-card'
 import { NewMonitorSheet } from '@/components/new-monitor-sheet'
 import { RequestPermissionSheet } from '@/components/request-permission-sheet'
 import { useBottomSheet } from '@/components/ui/bottom-sheet'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { StatusBar } from '@/components/ui/status-bar'
+import { MonitorModel } from '@/database/models/monitor-model'
+import { monitorRepository } from '@/database/repositories/monitor-repository'
 import { checkFineLocationPermission } from '@/utils/permissions'
 import { Plus } from 'phosphor-react-native'
 import React from 'react'
-import { View } from 'react-native'
+import { FlatList, Text, View } from 'react-native'
 
 export const AllMonitorsScreen = ({ navigation }: PreferencesScreenProps) => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [monitors, setMonitors] = React.useState<MonitorModel[]>([])
   const [search, setSearch] = React.useState('')
 
-  const handleSearch = (text: string) => setSearch(text)
+  const filteredMonitors = monitors.filter((monitor) =>
+    monitor.name.toLowerCase().includes(search.toLowerCase()),
+  )
+  const hasMonitors = filteredMonitors.length > 0
+  const lastCardIndex = filteredMonitors.length - 1
+
+  const handleSearchChange = (text: string) => setSearch(text)
 
   const { ref: monitorSheetRef, open: openMonitorSheet } = useBottomSheet()
-  const handleOpenMonitorSheet = () => openMonitorSheet()
+  const openMonitorSheetHandler = () => openMonitorSheet()
 
   const {
     ref: permissionSheetRef,
     open: openPermissionSheet,
     close: closePermissionSheet,
   } = useBottomSheet()
-  const handleOpenPermissionSheet = () => openPermissionSheet()
+  const openPermissionSheetHandler = () => openPermissionSheet()
 
-  const handleOnGrantPermission = () => {
+  const onGrantPermissionHandler = () => {
     closePermissionSheet()
-    handleOpenMonitorSheet()
+    openMonitorSheetHandler()
   }
 
-  const handleCheckPermissionAndOpenNewMonitorSheet = async () => {
+  const checkPermissionAndOpenMonitorSheet = async () => {
     const hasPermission = await checkFineLocationPermission()
     if (!hasPermission) {
-      return handleOpenPermissionSheet()
+      return openPermissionSheetHandler()
     }
-    handleOpenMonitorSheet()
+    openMonitorSheetHandler()
   }
+
+  React.useEffect(() => {
+    const subscription = monitorRepository
+      .observeAll()
+      .subscribe((monitors) => setMonitors(monitors))
+    return () => subscription.unsubscribe()
+  }, [])
 
   return (
     <>
       <StackScreen navigation={navigation} name="All monitors">
         <StatusBar mode="auto" />
-        <Input placeholder="Search" onChangeText={handleSearch} />
+        <Input placeholder="Search" onChangeText={handleSearchChange} />
+
+        {hasMonitors ? (
+          <FlatList
+            data={filteredMonitors}
+            keyExtractor={(item) => item.id}
+            renderItem={({ item, index }) => (
+              <MonitorCard
+                monitor={item}
+                isSelected={false}
+                isLast={lastCardIndex === index}
+              />
+            )}
+            showsVerticalScrollIndicator={false}
+          />
+        ) : (
+          <Text className="text-center text-base font-normal text-neutral-500 dark:text-neutral-400">
+            No monitors found
+          </Text>
+        )}
 
         <View
-          className="absolute bottom-8 right-8 rounded-2xl
-      bg-neutral-50 dark:bg-neutral-950"
+          className="absolute bottom-8 right-8 rounded-2xl bg-neutral-50 dark:bg-neutral-950"
           style={{ elevation: 1 }}
         >
           <Button
             size="icon"
             icon={<Plus size={24} weight="bold" />}
-            onPress={handleCheckPermissionAndOpenNewMonitorSheet}
+            onPress={checkPermissionAndOpenMonitorSheet}
           />
         </View>
       </StackScreen>
 
       <NewMonitorSheet ref={monitorSheetRef} />
       <RequestPermissionSheet
-        onGrantPermission={handleOnGrantPermission}
+        onGrantPermission={onGrantPermissionHandler}
         ref={permissionSheetRef}
       />
     </>
