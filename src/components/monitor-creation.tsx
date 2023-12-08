@@ -10,9 +10,13 @@ interface MonitorCreationProps {
   buttonVariant?: ButtonProps['variant']
   buttonSize?: ButtonProps['size']
   buttonClassName?: string
+  isFirstMonitor?: boolean
 }
 
-export const MonitorCreation = ({ ...props }: MonitorCreationProps) => {
+export const MonitorCreation = ({
+  isFirstMonitor = false,
+  ...props
+}: MonitorCreationProps) => {
   const { ref: monitorSheetRef, open: openMonitorSheet } = useBottomSheet()
   const openMonitorSheetHandler = () => openMonitorSheet()
 
@@ -47,7 +51,7 @@ export const MonitorCreation = ({ ...props }: MonitorCreationProps) => {
         {props.buttonLabel}
       </Button>
 
-      <NewMonitorSheet ref={monitorSheetRef} />
+      <NewMonitorSheet ref={monitorSheetRef} isFirstMonitor={isFirstMonitor} />
       <RequestPermissionSheet
         onGrantPermission={onGrantPermissionHandler}
         ref={permissionSheetRef}

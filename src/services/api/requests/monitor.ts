@@ -17,6 +17,7 @@ export interface ConfigureMonitorRequest {
   token: string
   wifi: WifiSettings
   mqtt: MqttSettings
+  actuators: string[]
 }
 
 export const configureMonitorRequest = async (

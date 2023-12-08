@@ -1,15 +1,18 @@
 {
   "expo": {
     "AppEntry": "./src/main.js",
-    "assetBundlePatterns": [
-      "**/*"
-    ],
-    "userInterfaceStyle": "automatic",
+    "assetBundlePatterns": ["**/*"],
     "experiments": {
       "tsconfigPaths": true
     },
+    "extra": {
+      "eas": {
+        "projectId": "fc315912-4985-4c8c-a4b5-159426c06066"
+      }
+    },
     "name": "leaf_wise",
     "slug": "leaf_wise",
+    "userInterfaceStyle": "automatic",
     "version": "1.0.0"
   }
 }

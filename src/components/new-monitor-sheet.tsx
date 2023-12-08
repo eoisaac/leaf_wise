@@ -5,6 +5,7 @@ import {
   BottomSheetRef,
 } from '@/components/ui/bottom-sheet'
 import { Button } from '@/components/ui/button'
+import { ActuatorModel } from '@/database/models/actuator-model'
 import { MonitorModel } from '@/database/models/monitor-model'
 import { actuatorRepository } from '@/database/repositories/actuator-repository'
 import { monitorRepository } from '@/database/repositories/monitor-repository'
@@ -12,13 +13,21 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import React from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { Text, View } from 'react-native'
+import WifiManager from 'react-native-wifi-reborn'
 import { z } from 'zod'
 
-const NewMonitorSheet = React.forwardRef<BottomSheetRef, BottomSheetProps>(
-  ({ ...props }, ref) => {
+interface NewMonitorSheetProps extends BottomSheetProps {
+  isFirstMonitor?: boolean
+}
+
+const NewMonitorSheet = React.forwardRef<BottomSheetRef, NewMonitorSheetProps>(
+  ({ isFirstMonitor = false, ...props }, ref) => {
     const [newMonitor, setNewMonitor] = React.useState<MonitorModel | null>(
       null,
     )
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [actuators, setActuators] = React.useState<ActuatorModel[]>([])
+
     const [formStep, setFormStep] = React.useState(0)
     const isFirstStep = formStep === 0
 
@@ -46,18 +55,19 @@ const NewMonitorSheet = React.forwardRef<BottomSheetRef, BottomSheetProps>(
       if (!newMonitor) {
         const created = await monitorRepository.create({
           ...values,
-          isSelected: true,
+          isSelected: isFirstMonitor,
         })
         setNewMonitor(created)
 
-        await actuatorRepository.create({
+        const actuator1 = await actuatorRepository.create({
           monitorId: created.id,
           name: 'Actuator 1',
         })
-        await actuatorRepository.create({
+        const actuator2 = await actuatorRepository.create({
           monitorId: created.id,
           name: 'Actuator 2',
         })
+        setActuators([actuator1, actuator2])
       } else {
         const updated = await monitorRepository.update(newMonitor.id, values)
         setNewMonitor(updated)
@@ -68,6 +78,24 @@ const NewMonitorSheet = React.forwardRef<BottomSheetRef, BottomSheetProps>(
 
     const handleConfigureMonitor = async () => {
       console.log('configuring monitor...')
+      const response = await WifiManager.getIP()
+      // const response = await configureMonitorRequest({
+      //   id: newMonitor!.id,
+      //   wifi: {
+      //     ssid: newMonitor!.wifiSSID ?? '',
+      //     password: newMonitor!.wifiPassword ?? '',
+      //   },
+      //   mqtt: {
+      //     host: 'mqtt.host',
+      //     password: '12345678',
+      //     port: 1883,
+      //     username: '',
+      //   },
+      //   token: 'abc123',
+      //   actuators: actuators.map((actuator) => actuator.id),
+      // })
+
+      console.log('response', response)
       handleCancel()
     }
 

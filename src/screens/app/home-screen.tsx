@@ -48,6 +48,7 @@ export const HomeScreen = ({ navigation }: HomeScreenProps) => {
           <MonitorCreation
             buttonLabel="Create a new monitor"
             buttonClassName="w-full"
+            isFirstMonitor
           />
         </View>
       )}
