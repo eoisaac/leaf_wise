@@ -1,16 +1,12 @@
 import { PreferencesScreenProps } from '@/@types/routes'
 import { StackScreen } from '@/components/layouts/stack-screen'
 import { MonitorCard } from '@/components/monitor-card'
-import { NewMonitorSheet } from '@/components/new-monitor-sheet'
+import { MonitorCreation } from '@/components/monitor-creation'
 import { NotFoundMessage } from '@/components/not-found-message'
-import { RequestPermissionSheet } from '@/components/request-permission-sheet'
-import { useBottomSheet } from '@/components/ui/bottom-sheet'
-import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { StatusBar } from '@/components/ui/status-bar'
 import { MonitorModel } from '@/database/models/monitor-model'
 import { monitorRepository } from '@/database/repositories/monitor-repository'
-import { checkFineLocationPermission } from '@/utils/permissions'
 import { Plus } from 'phosphor-react-native'
 import React from 'react'
 import { FlatList, View } from 'react-native'
@@ -27,38 +23,12 @@ export const AllMonitorsScreen = ({ navigation }: PreferencesScreenProps) => {
 
   const handleSearchChange = (text: string) => setSearch(text)
 
-  const { ref: monitorSheetRef, open: openMonitorSheet } = useBottomSheet()
-  const openMonitorSheetHandler = () => openMonitorSheet()
-
-  const {
-    ref: permissionSheetRef,
-    open: openPermissionSheet,
-    close: closePermissionSheet,
-  } = useBottomSheet()
-  const openPermissionSheetHandler = () => openPermissionSheet()
-
-  const onGrantPermissionHandler = () => {
-    closePermissionSheet()
-    openMonitorSheetHandler()
-  }
-
-  const checkPermissionAndOpenMonitorSheet = async () => {
-    const hasPermission = await checkFineLocationPermission()
-    if (!hasPermission) {
-      return openPermissionSheetHandler()
-    }
-    openMonitorSheetHandler()
-  }
-
   React.useEffect(() => {
     const subscription = monitorRepository
       .observeAll()
       .subscribe((monitors) => setMonitors(monitors))
     return () => subscription.unsubscribe()
   }, [])
-
-  const selectMonitor = async (monitor: MonitorModel) =>
-    await monitorRepository.select(monitor.id)
 
   return (
     <>
@@ -72,11 +42,7 @@ export const AllMonitorsScreen = ({ navigation }: PreferencesScreenProps) => {
               data={filteredMonitors}
               keyExtractor={(item) => item.id}
               renderItem={({ item, index }) => (
-                <MonitorCard
-                  monitor={item}
-                  isLast={lastCardIndex === index}
-                  onButtonPress={selectMonitor}
-                />
+                <MonitorCard monitor={item} isLast={lastCardIndex === index} />
               )}
               showsVerticalScrollIndicator={false}
             />
@@ -84,24 +50,16 @@ export const AllMonitorsScreen = ({ navigation }: PreferencesScreenProps) => {
             <NotFoundMessage message="No monitors found" className="flex-1" />
           )}
         </View>
-
-        <View
-          className="absolute bottom-8 right-8 rounded-2xl bg-neutral-50 dark:bg-neutral-950"
-          style={{ elevation: 1 }}
-        >
-          <Button
-            size="icon"
-            icon={<Plus size={24} weight="bold" />}
-            onPress={checkPermissionAndOpenMonitorSheet}
-          />
-        </View>
       </StackScreen>
-
-      <NewMonitorSheet ref={monitorSheetRef} />
-      <RequestPermissionSheet
-        onGrantPermission={onGrantPermissionHandler}
-        ref={permissionSheetRef}
-      />
+      <View
+        className="absolute bottom-8 right-8 rounded-2xl bg-neutral-50 dark:bg-neutral-950"
+        style={{ elevation: 1 }}
+      >
+        <MonitorCreation
+          buttonSize="icon"
+          buttonIcon={<Plus size={24} weight="bold" />}
+        />
+      </View>
     </>
   )
 }

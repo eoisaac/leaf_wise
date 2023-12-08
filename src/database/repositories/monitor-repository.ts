@@ -46,27 +46,6 @@ const destroy = async (monitor: MonitorModel): Promise<void> => {
   })
 }
 
-const select = async (monitorId: string): Promise<MonitorModel | null> => {
-  return await watermelonDB.write(async () => {
-    const stored = await watermelonDB
-      .get<MonitorModel>(TABLE_NAME)
-      .query(Q.where('is_selected', true))
-
-    if (stored.length > 0) {
-      await stored[0].update((data) => {
-        data.isSelected = false
-      })
-    }
-
-    const newSelectedMonitor = await watermelonDB
-      .get<MonitorModel>(TABLE_NAME)
-      .find(monitorId)
-    return await newSelectedMonitor.update((data) => {
-      data.isSelected = true
-    })
-  })
-}
-
 const observeAll = (): Observable<MonitorModel[]> => {
   return watermelonDB.get<MonitorModel>(TABLE_NAME).query().observe()
 }
@@ -82,7 +61,6 @@ export const monitorRepository = {
   create,
   update,
   destroy,
-  select,
   observeAll,
   observeSelected,
 }

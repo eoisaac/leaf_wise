@@ -75,7 +75,7 @@ const getButtonIconColor = (isDark: boolean, variant: string) => {
   return textColors[variant]
 }
 
-interface ButtonProps
+export interface ButtonProps
   extends TouchableOpacityProps,
     VariantProps<typeof buttonVariants> {
   children?: React.ReactNode

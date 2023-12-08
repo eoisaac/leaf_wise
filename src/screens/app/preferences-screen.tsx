@@ -4,7 +4,7 @@ import { StackScreen } from '@/components/layouts/stack-screen'
 import { useBottomSheet } from '@/components/ui/bottom-sheet'
 import { Button } from '@/components/ui/button'
 import { watermelonDB } from '@/database/watermelon'
-import { Text, View } from 'react-native'
+import { View } from 'react-native'
 
 export const PreferencesScreen = ({ navigation }: AllMonitorsScreenProps) => {
   const { ref, open } = useBottomSheet()
@@ -20,11 +20,7 @@ export const PreferencesScreen = ({ navigation }: AllMonitorsScreenProps) => {
   return (
     <>
       <StackScreen navigation={navigation} name="Preferences">
-        <View>
-          <Text className="flex-1 text-2xl font-bold text-neutral-900 dark:text-neutral-100">
-            Preferences
-          </Text>
-
+        <View className="flex-1 justify-end">
           <Button
             className="w-full"
             variant="danger"

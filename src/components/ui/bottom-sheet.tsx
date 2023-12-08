@@ -2,6 +2,7 @@ import { styled } from 'nativewind'
 import React from 'react'
 import { Text, View } from 'react-native'
 import { Modalize, ModalizeProps, useModalize } from 'react-native-modalize'
+import { Portal } from 'react-native-portalize'
 
 type BottomSheetRef = Modalize
 
@@ -58,15 +59,17 @@ const BottomSheet = React.forwardRef<BottomSheetRef, BottomSheetProps>(
     ref,
   ) => {
     return (
-      <StyledBottomSheet
-        ref={ref}
-        HeaderComponent={HeaderComponent}
-        modalStyle="bg-neutral-50 p-8 pb-12 dark:bg-neutral-900 rounded-t-3xl"
-        overlayStyle="bg-neutral-950/50"
-        handleStyle="h-[6px] w-14 rounded-lg bg-neutral-200 dark:bg-neutral-700"
-        adjustToContentHeight={adjustToContentHeight}
-        {...props}
-      />
+      <Portal>
+        <StyledBottomSheet
+          ref={ref}
+          HeaderComponent={HeaderComponent}
+          modalStyle="bg-neutral-50 p-8 pb-12 dark:bg-neutral-900 rounded-t-3xl"
+          overlayStyle="bg-neutral-950/50"
+          handleStyle="h-[6px] w-14 rounded-lg bg-neutral-200 dark:bg-neutral-700"
+          adjustToContentHeight={adjustToContentHeight}
+          {...props}
+        />
+      </Portal>
     )
   },
 )

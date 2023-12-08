@@ -3,7 +3,7 @@ import { Drop, Leaf, Sun, Thermometer } from 'phosphor-react-native'
 import { FlatList } from 'react-native'
 
 export interface EnvStatus {
-  value: number
+  value: string
   unit: string
 }
 
@@ -26,19 +26,19 @@ const statusIcons: Record<EnvStatusType, JSX.Element> = {
 
 const data: EnvData = {
   temperature: {
-    value: 25,
+    value: '-',
     unit: '°C',
   },
   humidity: {
-    value: 60,
+    value: '-',
     unit: '%',
   },
   soilMoisture: {
-    value: 40,
+    value: '-',
     unit: '%',
   },
   light: {
-    value: 500,
+    value: '-',
     unit: 'lux',
   },
 }

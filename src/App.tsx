@@ -11,6 +11,7 @@ import {
 } from '@expo-google-fonts/inter'
 import { View } from 'react-native'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
+import { Host } from 'react-native-portalize'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 
 export const App = () => {
@@ -23,15 +24,17 @@ export const App = () => {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <SafeAreaProvider style={{ flex: 1 }}>
-        <StatusBar mode="light" />
-        <View
-          className="flex-1 bg-neutral-50 dark:bg-neutral-950"
-          style={{ flex: 1 }}
-        >
-          {!fontsLoaded ? <LoadingScreen /> : <Routes />}
-        </View>
-      </SafeAreaProvider>
+      <Host style={{ flex: 1 }}>
+        <SafeAreaProvider style={{ flex: 1 }}>
+          <StatusBar mode="light" />
+          <View
+            className="flex-1 bg-neutral-50 dark:bg-neutral-950"
+            style={{ flex: 1 }}
+          >
+            {!fontsLoaded ? <LoadingScreen /> : <Routes />}
+          </View>
+        </SafeAreaProvider>
+      </Host>
     </GestureHandlerRootView>
   )
 }

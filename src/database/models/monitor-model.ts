@@ -1,7 +1,13 @@
 import { ActuatorModel } from '@/database/models/actuator-model'
-import { Model } from '@nozbe/watermelondb'
+import { Model, Q } from '@nozbe/watermelondb'
 import { Associations } from '@nozbe/watermelondb/Model'
-import { children, date, field, readonly } from '@nozbe/watermelondb/decorators'
+import {
+  children,
+  date,
+  field,
+  readonly,
+  writer,
+} from '@nozbe/watermelondb/decorators'
 
 export class MonitorModel extends Model {
   static table = 'monitors'
@@ -19,4 +25,26 @@ export class MonitorModel extends Model {
   @readonly @date('updated_at') updatedAt!: number
 
   @children('actuators') actuators: ActuatorModel[]
+
+  @writer async setSelected(isSelected: boolean) {
+    const stored = await this.database
+      .get<MonitorModel>('monitors')
+      .query(Q.where('is_selected', true))
+
+    if (stored.length > 0) {
+      await stored[0].update((data) => {
+        data.isSelected = false
+      })
+    }
+
+    await this.update((monitor) => {
+      monitor.isSelected = isSelected
+    })
+  }
+
+  @writer async setSynced(isSynced: boolean) {
+    await this.update((monitor) => {
+      monitor.isSynced = isSynced
+    })
+  }
 }

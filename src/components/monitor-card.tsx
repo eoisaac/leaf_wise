@@ -4,12 +4,13 @@ import { mergeTailwind } from '@/utils/tailwind'
 import { withObservables } from '@nozbe/watermelondb/react'
 import { CaretRight, Info } from 'phosphor-react-native'
 import { Text, View } from 'react-native'
+import { ConfirmSheet } from './confirm-sheet'
+import { useBottomSheet } from './ui/bottom-sheet'
 
 interface MonitorCardProps {
   monitor: MonitorModel
   isLast?: boolean
   className?: string
-  onButtonPress?: (monitor?: MonitorModel) => void
 }
 
 const enhance = withObservables(['monitor'], ({ monitor }) => ({
@@ -17,44 +18,61 @@ const enhance = withObservables(['monitor'], ({ monitor }) => ({
 }))
 
 export const MonitorCard = enhance(
-  ({ monitor, isLast = false, className, onButtonPress }: MonitorCardProps) => {
+  ({ monitor, isLast = false, className }: MonitorCardProps) => {
+    const { ref, open } = useBottomSheet()
+
+    const handleOpenConfirmSheet = () => open()
+
     const monitorDisplayId = monitor.id.slice(0, 13)
 
-    const handleSelectMonitor = () => onButtonPress?.(monitor)
+    const handleSelectMonitor = () => monitor.setSelected(true)
 
     return (
-      <View
-        className={mergeTailwind(
-          `mb-2 mt-2 flex-row items-center justify-between rounded-2xl
+      <>
+        <View
+          className={mergeTailwind(
+            `mb-2 mt-2 flex-row items-center justify-between rounded-2xl
         border-2 border-transparent bg-neutral-100 p-4 dark:bg-neutral-900`,
-          className,
-          {
-            'border-lime-400 dark:border-lime-500': monitor.isSelected,
-            'mb-8': isLast,
-          },
-        )}
-        style={{ elevation: 1 }}
-      >
-        <View>
-          <Text className="mb-1 text-xl font-bold text-neutral-900 dark:text-neutral-100">
-            {monitor.name}
-          </Text>
-          <Text className="text-sm font-medium text-neutral-500 dark:text-neutral-400">
-            #{monitorDisplayId}
-          </Text>
-        </View>
+            className,
+            {
+              'border-lime-400 dark:border-lime-500': monitor.isSelected,
+              'mb-8': isLast,
+            },
+          )}
+          style={{ elevation: 1 }}
+        >
+          <View>
+            <Text className="mb-1 text-xl font-bold text-neutral-900 dark:text-neutral-100">
+              {monitor.name}
+            </Text>
+            <Text className="text-sm font-medium text-neutral-500 dark:text-neutral-400">
+              #{monitorDisplayId}
+            </Text>
+          </View>
 
-        {monitor.isSelected ? (
-          <Button variant="ghost2" size="icon" icon={<Info weight="bold" />} />
-        ) : (
-          <Button
-            variant="ghost"
-            size="icon"
-            icon={<CaretRight weight="bold" />}
-            onPress={handleSelectMonitor}
-          />
-        )}
-      </View>
+          {monitor.isSelected ? (
+            <Button
+              variant="ghost2"
+              size="icon"
+              icon={<Info weight="bold" />}
+            />
+          ) : (
+            <Button
+              variant="ghost"
+              size="icon"
+              icon={<CaretRight weight="bold" />}
+              onPress={handleOpenConfirmSheet}
+            />
+          )}
+        </View>
+        <ConfirmSheet
+          ref={ref}
+          title={`Select ${monitor.name}?`}
+          description="Are you sure you want to select this monitor?"
+          onConfirm={handleSelectMonitor}
+          closeOnAction
+        />
+      </>
     )
   },
 )

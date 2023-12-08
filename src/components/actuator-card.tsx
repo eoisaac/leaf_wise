@@ -5,6 +5,8 @@ import { mergeTailwind } from '@/utils/tailwind'
 import { withObservables } from '@nozbe/watermelondb/react'
 import { Gear, Power } from 'phosphor-react-native'
 import { Text, View } from 'react-native'
+import { ConfirmSheet } from './confirm-sheet'
+import { useBottomSheet } from './ui/bottom-sheet'
 
 interface ActuatorCardProps {
   actuator: ActuatorModel
@@ -17,9 +19,8 @@ const enhance = withObservables(['actuator'], ({ actuator }) => ({
 
 export const ActuatorCard = enhance(
   ({ actuator, isLast }: ActuatorCardProps) => {
-    // const { ref: confirmSheetRef, open: openConfirmSheet } = useBottomSheet()
-
-    // const handleDisplayConfirmSheet = () => openConfirmSheet()
+    const { ref: confirmSheetRef, open: openConfirmSheet } = useBottomSheet()
+    const handleDisplayConfirmSheet = () => openConfirmSheet()
 
     return (
       <View
@@ -47,17 +48,17 @@ export const ActuatorCard = enhance(
             variant="primary"
             size="icon"
             icon={<Power weight="bold" />}
-            // onPress={handleDisplayConfirmSheet}
+            onPress={handleDisplayConfirmSheet}
           />
         </View>
 
-        {/* <ConfirmSheet
-        title={`Activate ${props.actuator.name}?`}
-        description="Are you sure you want to activate this actuator?"
-        confirmLabel="Activate"
-        ref={confirmSheetRef}
-        closeOnAction
-      /> */}
+        <ConfirmSheet
+          title={`Activate ${actuator.name}?`}
+          description="Are you sure you want to activate this actuator?"
+          confirmLabel="Activate"
+          ref={confirmSheetRef}
+          closeOnAction
+        />
       </View>
     )
   },

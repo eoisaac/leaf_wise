@@ -21,11 +21,12 @@ export interface ConfigureMonitorRequest {
 
 export const configureMonitorRequest = async (
   values: ConfigureMonitorRequest,
-) => {
+): Promise<boolean> => {
   try {
     const response = await monitorApi.post('/', values)
-    return response.data
+    return response.data as boolean
   } catch (error) {
     console.error(error)
+    return false
   }
 }

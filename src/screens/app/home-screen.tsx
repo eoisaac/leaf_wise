@@ -1,7 +1,7 @@
 import { HomeScreenProps } from '@/@types/routes'
 import { HomeHeader } from '@/components/home-header'
+import { MonitorCreation } from '@/components/monitor-creation'
 import { SelectedMonitorDetails } from '@/components/selected-monitor-details'
-import { Button } from '@/components/ui/button'
 import { MonitorModel } from '@/database/models/monitor-model'
 import { monitorRepository } from '@/database/repositories/monitor-repository'
 import React from 'react'
@@ -34,15 +34,21 @@ export const HomeScreen = ({ navigation }: HomeScreenProps) => {
           />
         </View>
       ) : (
-        <View className="flex-1 items-center justify-center space-y-3 p-8">
+        <View className="flex-1 items-center justify-center space-y-2 p-8">
           <Text className="text-2xl font-bold text-neutral-900 dark:text-neutral-100">
-            No monitor selected
+            No monitors yet
           </Text>
-          <Text className="text-neutral-500 dark:text-neutral-400">
-            Select a monitor from the list below
+          <Text
+            className="mb-6 px-3 text-center text-base font-normal text-neutral-500 
+          dark:text-neutral-400"
+          >
+            Create a new monitor to start tracking and monitoring your plants.
           </Text>
 
-          <Button onPress={navigateToAllMonitors}>Add new monitor</Button>
+          <MonitorCreation
+            buttonLabel="Create a new monitor"
+            buttonClassName="w-full"
+          />
         </View>
       )}
 

@@ -44,7 +44,10 @@ const NewMonitorSheet = React.forwardRef<BottomSheetRef, BottomSheetProps>(
 
     const handleStoreMonitor = async (values: FormValues) => {
       if (!newMonitor) {
-        const created = await monitorRepository.create(values)
+        const created = await monitorRepository.create({
+          ...values,
+          isSelected: true,
+        })
         setNewMonitor(created)
 
         await actuatorRepository.create({
