@@ -8,6 +8,7 @@ import { Text, View } from 'react-native'
 interface MonitorCardProps {
   monitor: MonitorModel
   isLast?: boolean
+  className?: string
   onButtonPress?: (monitor?: MonitorModel) => void
 }
 
@@ -16,7 +17,7 @@ const enhance = withObservables(['monitor'], ({ monitor }) => ({
 }))
 
 export const MonitorCard = enhance(
-  ({ monitor, isLast = false, onButtonPress }: MonitorCardProps) => {
+  ({ monitor, isLast = false, className, onButtonPress }: MonitorCardProps) => {
     const monitorDisplayId = monitor.id.slice(0, 13)
 
     const handleSelectMonitor = () => onButtonPress?.(monitor)
@@ -26,6 +27,7 @@ export const MonitorCard = enhance(
         className={mergeTailwind(
           `mb-2 mt-2 flex-row items-center justify-between rounded-2xl
         border-2 border-transparent bg-neutral-100 p-4 dark:bg-neutral-900`,
+          className,
           {
             'border-lime-400 dark:border-lime-500': monitor.isSelected,
             'mb-8': isLast,

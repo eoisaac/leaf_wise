@@ -71,10 +71,18 @@ const observeAll = (): Observable<MonitorModel[]> => {
   return watermelonDB.get<MonitorModel>(TABLE_NAME).query().observe()
 }
 
+const observeSelected = (): Observable<MonitorModel[]> => {
+  return watermelonDB
+    .get<MonitorModel>(TABLE_NAME)
+    .query(Q.where('is_selected', true))
+    .observeWithColumns(['is_selected'])
+}
+
 export const monitorRepository = {
   create,
   update,
   destroy,
   select,
   observeAll,
+  observeSelected,
 }

@@ -50,7 +50,7 @@ const buttonTextVariants = cva('text-xl font-medium', {
       danger: 'text-red-50',
     },
     size: {
-      default: '',
+      default: 'text-base',
       sm: 'text-lg',
       lg: 'text-2xl',
       icon: 'text-xl',

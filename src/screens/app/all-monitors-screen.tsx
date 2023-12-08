@@ -57,9 +57,8 @@ export const AllMonitorsScreen = ({ navigation }: PreferencesScreenProps) => {
     return () => subscription.unsubscribe()
   }, [])
 
-  const selectMonitor = async (monitor: MonitorModel) => {
+  const selectMonitor = async (monitor: MonitorModel) =>
     await monitorRepository.select(monitor.id)
-  }
 
   return (
     <>
@@ -82,7 +81,7 @@ export const AllMonitorsScreen = ({ navigation }: PreferencesScreenProps) => {
               showsVerticalScrollIndicator={false}
             />
           ) : (
-            <NotFoundMessage message="No monitors found" />
+            <NotFoundMessage message="No monitors found" className="flex-1" />
           )}
         </View>
 

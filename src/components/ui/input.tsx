@@ -18,7 +18,7 @@ const Input = React.forwardRef<TextInput, InputProps>(
         ref={ref}
         className={mergeTailwind(
           `rounded-2xl border-2 border-solid border-neutral-200 bg-neutral-100
-          px-4 py-3 text-lg text-neutral-900 focus:border-lime-400 dark:border-neutral-800
+          px-4 py-3 text-base text-neutral-900 focus:border-lime-400 dark:border-neutral-800
           dark:bg-neutral-900 dark:text-neutral-100 dark:focus:border-lime-500`,
           className,
         )}

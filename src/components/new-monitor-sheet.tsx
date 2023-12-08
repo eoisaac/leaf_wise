@@ -6,6 +6,7 @@ import {
 } from '@/components/ui/bottom-sheet'
 import { Button } from '@/components/ui/button'
 import { MonitorModel } from '@/database/models/monitor-model'
+import { actuatorRepository } from '@/database/repositories/actuator-repository'
 import { monitorRepository } from '@/database/repositories/monitor-repository'
 import { zodResolver } from '@hookform/resolvers/zod'
 import React from 'react'
@@ -45,6 +46,15 @@ const NewMonitorSheet = React.forwardRef<BottomSheetRef, BottomSheetProps>(
       if (!newMonitor) {
         const created = await monitorRepository.create(values)
         setNewMonitor(created)
+
+        await actuatorRepository.create({
+          monitorId: created.id,
+          name: 'Actuator 1',
+        })
+        await actuatorRepository.create({
+          monitorId: created.id,
+          name: 'Actuator 2',
+        })
       } else {
         const updated = await monitorRepository.update(newMonitor.id, values)
         setNewMonitor(updated)
