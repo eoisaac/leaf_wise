@@ -69,7 +69,7 @@ class WiFiService:
             if self.is_hosting():
                 config = self.access_point_interface.ifconfig()
                 print(
-                    f"\nWiFi hosted! Network - SSID: {ssid}, IP: {config[0]}")
+                    f"\nWiFi hosted! Network - SSID: {ssid}, IP: {config[0]} Port: {config[1]}")
         except Exception as e:
             self._handle_error(e)
 

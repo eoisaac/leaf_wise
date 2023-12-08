@@ -16,6 +16,7 @@ class Config:
             "id": str,
             "mqtt": {"host": str, "port": int, "username": str, "password": str},
             "wifi": {"ssid": str, "password": str},
+            "actuators": {"0": str, "1": str}
         }
         self.COMPLETE_SCHEMA = {
             "id": str,
@@ -23,6 +24,7 @@ class Config:
             "mqtt": {"host": str, "port": int, "username": str, "password": str},
             "wifi": {"ssid": str, "password": str},
             "ap": {"ssid": str, "password": str},
+            "actuators": {"0": str, "1": str}
         }
 
     def load_config(self) -> dict:
@@ -39,9 +41,9 @@ class Config:
         """
         Load default configuration data and create the JSON file if it doesn't exist.
         """
-        ssid = "Leaft Wise Monitor"
-        password = "12345678"
-        token = "z2C7nicSvRakMQe0i9rTShJJnx0YKWBs"
+        ssid = "LeafWise Monitor"
+        password = "z2C7nicSvRakMQe0i9rTShJJnx0YKWBs"
+        token = "eyJSb2xlIjoiQWRtaW4iLCJJc3N1ZXIiOiJJc3N1ZXIiLCJVc2VybmFtZSI6Ikp"
 
         print(
             f"Configuration file not found. Creating a new one at {self._file_path}")
@@ -119,9 +121,9 @@ class Config:
                     return False
                 if not self.check_schema(payload[key], value):
                     return False
-
             elif not isinstance(payload[key], value):
                 return False
+
         for key in payload:
             if key not in schema:
                 return False
