@@ -1,8 +1,8 @@
+import { SafeScreen } from '@/components/layouts/safe-screen'
+import { Button } from '@/components/ui/button'
 import { NavigationProp } from '@react-navigation/native'
 import { ArrowLeft } from 'phosphor-react-native'
 import { Text, View } from 'react-native'
-import { Button } from '../ui/button'
-import { SafeScreen } from './safe-screen'
 
 interface StackScreenProps {
   name?: string

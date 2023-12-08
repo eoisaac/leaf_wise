@@ -4,8 +4,8 @@ import { mergeTailwind } from '@/utils/tailwind'
 import { withObservables } from '@nozbe/watermelondb/react'
 import { CaretRight, Info } from 'phosphor-react-native'
 import { Text, View } from 'react-native'
-import { ConfirmSheet } from './confirm-sheet'
-import { useBottomSheet } from './ui/bottom-sheet'
+import { ConfirmSheet } from '@/components/confirm-sheet'
+import { useBottomSheet } from '@/components/ui/bottom-sheet'
 
 interface MonitorCardProps {
   monitor: MonitorModel

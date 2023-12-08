@@ -1,5 +1,6 @@
 # docker
-volumes/
+volumes/mqtt/data/
+volumes/mqtt/log/
 
 # npm
 node_modules/

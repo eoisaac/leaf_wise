@@ -3,6 +3,18 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "keywords": [],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eoisaac/leaf_wise.git"
+  },
+  "author": {
+    "name": "Isaac Santiago",
+    "email": "eoisaacc@gamail.com",
+    "url": "https://eoisaac.vercel.app/"
+  },
+  "homepage": "https://github.com/eoisaac/leaf_wise#readme",
   "scripts": {
     "prepare": "husky install",
     "pre-commit": "lint-staged",
@@ -16,9 +28,6 @@
       "npm run lint:fix"
     ]
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "devDependencies": {
     "husky": "^8.0.3",
     "lint-staged": "^15.2.0"
