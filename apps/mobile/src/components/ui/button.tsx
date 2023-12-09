@@ -117,14 +117,14 @@ const Button = React.forwardRef<TouchableOpacity, ButtonProps>(
           ) : (
             props.icon
           )}
-          <Text
-            className={mergeTailwind(
-              buttonTextVariants({ variant, size, className: textClassName }),
-            )}
-          >
-            {props.children}
-          </Text>
         </IconContext.Provider>
+        <Text
+          className={mergeTailwind(
+            buttonTextVariants({ variant, size, className: textClassName }),
+          )}
+        >
+          {props.children}
+        </Text>
       </TouchableOpacity>
     )
   },

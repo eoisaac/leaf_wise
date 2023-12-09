@@ -30,12 +30,11 @@ interface NewMonitorSheetProps extends BottomSheetProps {
 }
 
 const NewMonitorSheet = React.forwardRef<BottomSheetRef, NewMonitorSheetProps>(
-  ({ isFirstMonitor = false, ...props }, ref) => {
+  ({ ...props }, ref) => {
     const [isConfiguring, setIsConfiguring] = React.useState(false)
     const [newMonitor, setNewMonitor] = React.useState<MonitorModel | null>(
       null,
     )
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [actuators, setActuators] = React.useState<ActuatorModel[]>([])
 
     const [formStep, setFormStep] = React.useState(0)
@@ -58,14 +57,12 @@ const NewMonitorSheet = React.forwardRef<BottomSheetRef, NewMonitorSheetProps>(
     })
 
     const handleNextStep = () => setFormStep((prev) => prev + 1)
-    const handlePrevStep = () => setFormStep((prev) => prev - 1)
     const handleResetStep = () => setFormStep(0)
 
     const handleStoreMonitor = async (values: FormValues) => {
       if (!newMonitor) {
         const created = await monitorRepository.create({
           ...values,
-          isSelected: isFirstMonitor,
         })
         setNewMonitor(created)
 
@@ -115,9 +112,11 @@ const NewMonitorSheet = React.forwardRef<BottomSheetRef, NewMonitorSheetProps>(
           actuators: { '0': actuators[0].id, '1': actuators[1].id },
         })
 
-        console.log('response', response)
+        newMonitor?.setSelected(true)
+
+        console.log('response sheet', response)
       } catch (error) {
-        console.log('error', error)
+        console.log('error sheet', error)
       } finally {
         setIsConfiguring(false)
       }
@@ -156,13 +155,12 @@ const NewMonitorSheet = React.forwardRef<BottomSheetRef, NewMonitorSheetProps>(
         )}
 
         <View className="item-center mb-6 mt-4 flex-row space-x-4">
-          <Button
-            variant="ghost2"
-            className="flex-1"
-            onPress={isFirstStep ? handleCancel : handlePrevStep}
-          >
-            {isFirstStep ? 'Cancel' : 'Back'}
-          </Button>
+          {isFirstStep && (
+            <Button variant="ghost2" className="flex-1" onPress={handleCancel}>
+              Cancel
+            </Button>
+          )}
+
           <Button
             className="flex-1"
             loading={isConfiguring}
@@ -173,7 +171,7 @@ const NewMonitorSheet = React.forwardRef<BottomSheetRef, NewMonitorSheetProps>(
                 : handleConfigureMonitor
             }
           >
-            {isFirstStep ? 'Next' : 'Create'}
+            {isFirstStep ? 'Next' : 'Configure'}
           </Button>
         </View>
       </BottomSheet>

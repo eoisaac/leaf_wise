@@ -30,12 +30,12 @@ export const configureMonitorRequest = async (
   values: ConfigureMonitorRequest,
 ): Promise<boolean> => {
   try {
-    const url = await WifiManager.getIP()
-    // 192.168.4.1
+    const url = '192.168.4.1' || (await WifiManager.getIP())
     const monitorApi = axios.create({ baseURL: `http://${url}` })
     monitorApi.defaults.headers.Authorization = `Bearer ${MONITOR_API_TOKEN}`
 
     const response = await monitorApi.post('/', values)
+    console.log(response.data)
     return response.data
   } catch (error) {
     console.error(error)

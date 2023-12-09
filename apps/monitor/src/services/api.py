@@ -86,7 +86,11 @@ class ConfigAPI:
         """
         try:
             content = ujson.dumps(content)
-            return f"HTTP/1.1 {status_code} {status}\r\n\r\n{content}"
+            response = f"HTTP/1.1 {status_code} {status}\r\n"
+            response += "Content-Type: application/json\r\n"
+            response += f"Content-Length: {len(content)}\r\n\r\n"
+            response += content
+            return response
         except Exception as e:
             print("Failed to handle response:", str(e))
             return self._handle_response("Internal Server Error", 500, {
