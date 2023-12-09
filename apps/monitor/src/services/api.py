@@ -2,11 +2,10 @@ import re
 import time
 
 import ujson
-from usocket import AF_INET, SOCK_STREAM, socket
-
 from src.config.config import config
 from src.config.pins import GREEN_LED_PIN, YELLOW_LED_PIN
 from src.utils.led import blink_led
+from usocket import AF_INET, SOCK_STREAM, socket
 
 
 class ConfigAPI:
@@ -41,7 +40,8 @@ class ConfigAPI:
         try:
             if 'POST /' not in request:
                 return self._handle_response("Not Found", 404, {
-                    "error": "Not Found",
+                    "success": False,
+                    "message": "Not Found",
                 })
 
             token, data = self._parse_request(request)
@@ -49,35 +49,41 @@ class ConfigAPI:
             if token is None or token != config.get("token"):
                 print("No token provided")
                 return self._handle_response("Unauthorized", 401, {
-                    "error": "Unauthorized request"
+                    "success": False,
+                    "message": "Unauthorized request"
                 })
 
             if data is None:
                 print("No data provided")
                 return self._handle_response("Bad Request", 400, {
-                    "error": "No data provided"
+                    "success": False,
+                    "message": "No data provided"
                 })
 
             if not config.check_schema(data, config.CONFIG_SCHEMA):
                 print("Invalid data provided")
                 return self._handle_response("Bad Request", 400, {
-                    "error": "Invalid data provided"
+                    "success": False,
+                    "message": "Invalid data provided"
                 })
 
             if config.store(data):
                 print("Device configured successfully!", config.load_config())
                 blink_led(GREEN_LED_PIN)
                 return self._handle_response("OK", 200, {
+                    "success": True,
                     "message": "Device configured successfully!"
                 })
 
             return self._handle_response("Internal Server Error", 500, {
-                "error": "Error configuring device. Please try again."
+                "success": False,
+                "message": "Error configuring device. Please try again."
             })
         except Exception as e:
             print("Failed to handle request:", str(e))
             return self._handle_response("Internal Server Error", 500, {
-                "error": "Could not handle request. Please try again."
+                "success": False,
+                "message": "Could not handle request. Please try again."
             })
 
     def _handle_response(self, status: str, status_code: int, content: dict):
@@ -94,7 +100,8 @@ class ConfigAPI:
         except Exception as e:
             print("Failed to handle response:", str(e))
             return self._handle_response("Internal Server Error", 500, {
-                "error": "Could not handle response. Please try again."
+                "success": False,
+                "message": "Could not handle response. Please try again."
             })
 
     def loop(self):
@@ -117,7 +124,8 @@ class ConfigAPI:
         except Exception as e:
             print("Failed to handle request:", str(e))
             return self._handle_response("Internal Server Error", 500, {
-                "error": "Could not handle request. Please try again."
+                "success": False,
+                "message": "Could not handle request. Please try again."
             })
 
         except KeyboardInterrupt:

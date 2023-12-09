@@ -26,7 +26,7 @@ export class MonitorModel extends Model {
 
   @children('actuators') actuators: ActuatorModel[]
 
-  @writer async setSelected(isSelected: boolean) {
+  @writer async setSelected(isSelected: boolean = true) {
     const stored = await this.database
       .get<MonitorModel>('monitors')
       .query(Q.where('is_selected', true))
@@ -42,9 +42,18 @@ export class MonitorModel extends Model {
     })
   }
 
-  @writer async setSynced(isSynced: boolean) {
+  @writer async setSynced(isSynced: boolean = true) {
     await this.update((monitor) => {
       monitor.isSynced = isSynced
     })
+  }
+
+  @writer async getActuators() {
+    const actuators = await this.collections
+      .get<ActuatorModel>('actuators')
+      .query(Q.where('monitor_id', this.id))
+      .fetch()
+
+    return actuators ?? []
   }
 }

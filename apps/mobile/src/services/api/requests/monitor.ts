@@ -26,9 +26,14 @@ export interface ConfigureMonitorRequest {
   actuators: Actuators
 }
 
+export interface ConfigureMonitorResponse {
+  success: boolean
+  message: string
+}
+
 export const configureMonitorRequest = async (
   values: ConfigureMonitorRequest,
-): Promise<boolean> => {
+): Promise<ConfigureMonitorResponse> => {
   try {
     const url = '192.168.4.1' || (await WifiManager.getIP())
     const monitorApi = axios.create({ baseURL: `http://${url}` })
@@ -36,9 +41,9 @@ export const configureMonitorRequest = async (
 
     const response = await monitorApi.post('/', values)
     console.log(response.data)
-    return response.data
+    return response.data as ConfigureMonitorResponse
   } catch (error) {
     console.error(error)
-    return false
+    return error
   }
 }

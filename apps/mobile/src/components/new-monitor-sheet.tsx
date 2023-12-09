@@ -5,7 +5,6 @@ import {
   BottomSheetRef,
 } from '@/components/ui/bottom-sheet'
 import { Button } from '@/components/ui/button'
-import { ActuatorModel } from '@/database/models/actuator-model'
 import { MonitorModel } from '@/database/models/monitor-model'
 import { actuatorRepository } from '@/database/repositories/actuator-repository'
 import { monitorRepository } from '@/database/repositories/monitor-repository'
@@ -30,13 +29,9 @@ interface NewMonitorSheetProps extends BottomSheetProps {
 }
 
 const NewMonitorSheet = React.forwardRef<BottomSheetRef, NewMonitorSheetProps>(
-  ({ ...props }, ref) => {
+  ({ isFirstMonitor = false, ...props }, ref) => {
     const [isConfiguring, setIsConfiguring] = React.useState(false)
-    const [newMonitor, setNewMonitor] = React.useState<MonitorModel | null>(
-      null,
-    )
-    const [actuators, setActuators] = React.useState<ActuatorModel[]>([])
-
+    const [monitor, setMonitor] = React.useState<MonitorModel | null>(null)
     const [formStep, setFormStep] = React.useState(0)
     const isFirstStep = formStep === 0
 
@@ -50,9 +45,9 @@ const NewMonitorSheet = React.forwardRef<BottomSheetRef, NewMonitorSheetProps>(
     const form = useForm<FormValues>({
       resolver: zodResolver(formSchema),
       defaultValues: {
-        name: newMonitor?.name ?? '',
-        wifiSSID: newMonitor?.wifiSSID ?? '',
-        wifiPassword: newMonitor?.wifiPassword ?? '',
+        name: monitor?.name ?? '',
+        wifiSSID: monitor?.wifiSSID ?? '',
+        wifiPassword: monitor?.wifiPassword ?? '',
       },
     })
 
@@ -60,27 +55,34 @@ const NewMonitorSheet = React.forwardRef<BottomSheetRef, NewMonitorSheetProps>(
     const handleResetStep = () => setFormStep(0)
 
     const handleStoreMonitor = async (values: FormValues) => {
-      if (!newMonitor) {
-        const created = await monitorRepository.create({
-          ...values,
-        })
-        setNewMonitor(created)
+      if (!monitor) {
+        const created = await monitorRepository.create(values)
+        setMonitor(created)
 
-        const actuator1 = await actuatorRepository.create({
+        await actuatorRepository.create({
           monitorId: created.id,
           name: 'Actuator 1',
         })
-        const actuator2 = await actuatorRepository.create({
+        await actuatorRepository.create({
           monitorId: created.id,
           name: 'Actuator 2',
         })
-        setActuators([actuator1, actuator2])
       } else {
-        const updated = await monitorRepository.update(newMonitor.id, values)
-        setNewMonitor(updated)
+        const updated = await monitorRepository.update(monitor.id, values)
+        setMonitor(updated)
       }
 
       handleNextStep()
+    }
+
+    const handleResetSheet = () => {
+      form.reset()
+      setMonitor(null)
+      handleResetStep()
+
+      if (ref && typeof ref !== 'function' && ref.current) {
+        ref.current.close()
+      }
     }
 
     const handleConfigureMonitor = async () => {
@@ -97,11 +99,12 @@ const NewMonitorSheet = React.forwardRef<BottomSheetRef, NewMonitorSheetProps>(
           return
         }
 
+        const [act0, act1] = await monitor!.getActuators()
         const response = await configureMonitorRequest({
-          id: newMonitor!.id,
+          id: monitor!.id,
           wifi: {
-            ssid: newMonitor!.wifiSSID ?? '',
-            password: newMonitor!.wifiPassword ?? '',
+            ssid: monitor!.wifiSSID ?? '',
+            password: monitor!.wifiPassword ?? '',
           },
           mqtt: {
             host: String(MQTT_HOST),
@@ -109,26 +112,20 @@ const NewMonitorSheet = React.forwardRef<BottomSheetRef, NewMonitorSheetProps>(
             password: '',
             username: '',
           },
-          actuators: { '0': actuators[0].id, '1': actuators[1].id },
+          actuators: { '0': act0.id, '1': act1.id },
         })
 
-        newMonitor?.setSelected(true)
+        if (response && response.success) {
+          monitor?.setSynced()
+          isFirstMonitor && monitor?.setSelected()
+          handleResetSheet()
+        }
 
         console.log('response sheet', response)
       } catch (error) {
         console.log('error sheet', error)
       } finally {
         setIsConfiguring(false)
-      }
-    }
-
-    const handleCancel = () => {
-      form.reset()
-      setNewMonitor(null)
-      handleResetStep()
-
-      if (ref && typeof ref !== 'function' && ref.current) {
-        ref.current.close()
       }
     }
 
@@ -156,7 +153,11 @@ const NewMonitorSheet = React.forwardRef<BottomSheetRef, NewMonitorSheetProps>(
 
         <View className="item-center mb-6 mt-4 flex-row space-x-4">
           {isFirstStep && (
-            <Button variant="ghost2" className="flex-1" onPress={handleCancel}>
+            <Button
+              variant="ghost2"
+              className="flex-1"
+              onPress={handleResetSheet}
+            >
               Cancel
             </Button>
           )}
