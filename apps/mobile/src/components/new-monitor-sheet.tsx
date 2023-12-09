@@ -9,6 +9,7 @@ import { MonitorModel } from '@/database/models/monitor-model'
 import { actuatorRepository } from '@/database/repositories/actuator-repository'
 import { monitorRepository } from '@/database/repositories/monitor-repository'
 import { configureMonitorRequest } from '@/services/api/requests/monitor'
+import { useToastStore } from '@/stores/toast-store'
 import { Wifi } from '@/utils/wifi'
 import {
   MONITOR_WIFI_PASSWORD,
@@ -34,6 +35,8 @@ const NewMonitorSheet = React.forwardRef<BottomSheetRef, NewMonitorSheetProps>(
     const [monitor, setMonitor] = React.useState<MonitorModel | null>(null)
     const [formStep, setFormStep] = React.useState(0)
     const isFirstStep = formStep === 0
+
+    const { showToast } = useToastStore()
 
     const formSchema = z.object({
       name: z.string().min(3, 'Name must be at least 3 characters'),
@@ -95,8 +98,10 @@ const NewMonitorSheet = React.forwardRef<BottomSheetRef, NewMonitorSheetProps>(
         )
 
         if (!connected) {
-          console.log('not connected')
-          return
+          return showToast({
+            title: 'Connection failed',
+            message: 'Could not connect to monitor. Please, try again.',
+          })
         }
 
         const [act0, act1] = await monitor!.getActuators()
@@ -118,12 +123,19 @@ const NewMonitorSheet = React.forwardRef<BottomSheetRef, NewMonitorSheetProps>(
         if (response && response.success) {
           monitor?.setSynced()
           isFirstMonitor && monitor?.setSelected()
-          handleResetSheet()
-        }
 
-        console.log('response sheet', response)
+          showToast({
+            title: 'Monitor configured',
+            message: response.message,
+          })
+          return handleResetSheet()
+        }
       } catch (error) {
-        console.log('error sheet', error)
+        const defaultMsg = 'Could not configure monitor. Please, try again.'
+        showToast({
+          title: 'Error',
+          message: error?.message ?? defaultMsg,
+        })
       } finally {
         setIsConfiguring(false)
       }
