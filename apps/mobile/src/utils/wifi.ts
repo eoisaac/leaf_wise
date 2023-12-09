@@ -32,16 +32,21 @@ const _connectToWifi = async (
   }
 }
 
-export const connectToWifi = async (
+const connectToWifi = async (
   ssid: string,
   password: string,
 ): Promise<WifiResponse> => {
   return _connectToWifi(ssid, password, false)
 }
 
-export const testWifiConnection = async (
+const testWifiConnection = async (
   ssid: string,
   password: string,
 ): Promise<WifiResponse> => {
   return _connectToWifi(ssid, password, true)
+}
+
+export const Wifi = {
+  connectToWifi,
+  testWifiConnection,
 }

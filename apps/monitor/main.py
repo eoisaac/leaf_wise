@@ -3,7 +3,6 @@ import time
 import ujson
 from dht import DHT11
 from machine import ADC, SoftI2C
-
 from src.config.pins import DHT_PIN, I2C_SCL_PIN, I2C_SDA_PIN, SOIL_PIN
 from src.lib.bh1750 import BH1750
 from src.services.mqtt import MQTTService

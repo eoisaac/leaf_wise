@@ -9,11 +9,20 @@ import { ActuatorModel } from '@/database/models/actuator-model'
 import { MonitorModel } from '@/database/models/monitor-model'
 import { actuatorRepository } from '@/database/repositories/actuator-repository'
 import { monitorRepository } from '@/database/repositories/monitor-repository'
+import { configureMonitorRequest } from '@/services/api/requests/monitor'
+import { Wifi } from '@/utils/wifi'
+import {
+  MONITOR_WIFI_PASSWORD,
+  MONITOR_WIFI_SSID,
+  MQTT_HOST,
+  MQTT_PORT,
+} from '@env'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { Gear } from 'phosphor-react-native'
 import React from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { Text, View } from 'react-native'
-import WifiManager from 'react-native-wifi-reborn'
+import { neutral } from 'tailwindcss/colors'
 import { z } from 'zod'
 
 interface NewMonitorSheetProps extends BottomSheetProps {
@@ -22,6 +31,7 @@ interface NewMonitorSheetProps extends BottomSheetProps {
 
 const NewMonitorSheet = React.forwardRef<BottomSheetRef, NewMonitorSheetProps>(
   ({ isFirstMonitor = false, ...props }, ref) => {
+    const [isConfiguring, setIsConfiguring] = React.useState(false)
     const [newMonitor, setNewMonitor] = React.useState<MonitorModel | null>(
       null,
     )
@@ -77,26 +87,40 @@ const NewMonitorSheet = React.forwardRef<BottomSheetRef, NewMonitorSheetProps>(
     }
 
     const handleConfigureMonitor = async () => {
-      console.log('configuring monitor...')
-      const response = await WifiManager.getIP()
-      // const response = await configureMonitorRequest({
-      //   id: newMonitor!.id,
-      //   wifi: {
-      //     ssid: newMonitor!.wifiSSID ?? '',
-      //     password: newMonitor!.wifiPassword ?? '',
-      //   },
-      //   mqtt: {
-      //     host: 'mqtt.host',
-      //     password: '12345678',
-      //     port: 1883,
-      //     username: '',
-      //   },
-      //   token: 'abc123',
-      //   actuators: actuators.map((actuator) => actuator.id),
-      // })
+      try {
+        setIsConfiguring(true)
 
-      console.log('response', response)
-      handleCancel()
+        const { connected } = await Wifi.connectToWifi(
+          String(MONITOR_WIFI_SSID),
+          String(MONITOR_WIFI_PASSWORD),
+        )
+
+        if (!connected) {
+          console.log('not connected')
+          return
+        }
+
+        const response = await configureMonitorRequest({
+          id: newMonitor!.id,
+          wifi: {
+            ssid: newMonitor!.wifiSSID ?? '',
+            password: newMonitor!.wifiPassword ?? '',
+          },
+          mqtt: {
+            host: String(MQTT_HOST),
+            port: Number(MQTT_PORT),
+            password: '',
+            username: '',
+          },
+          actuators: { '0': actuators[0].id, '1': actuators[1].id },
+        })
+
+        console.log('response', response)
+      } catch (error) {
+        console.log('error', error)
+      } finally {
+        setIsConfiguring(false)
+      }
     }
 
     const handleCancel = () => {
@@ -118,8 +142,16 @@ const NewMonitorSheet = React.forwardRef<BottomSheetRef, NewMonitorSheetProps>(
             </FormProvider>
           </View>
         ) : (
-          <View>
-            <Text className="text-neutral-50">{newMonitor?.id}</Text>
+          <View className="mb-6 items-center space-y-6">
+            <Gear size={48} color={neutral[400]} />
+            <Text className="text-center text-base font-normal text-neutral-500 dark:text-neutral-400">
+              Please, make sure the monitor&apos;s
+              <Text className="text-base font-medium text-amber-500 dark:text-amber-400">
+                {' yellow '}
+              </Text>
+              led is on before proceeding. After that, press the button below to
+              configure the monitor.
+            </Text>
           </View>
         )}
 
@@ -133,6 +165,8 @@ const NewMonitorSheet = React.forwardRef<BottomSheetRef, NewMonitorSheetProps>(
           </Button>
           <Button
             className="flex-1"
+            loading={isConfiguring}
+            disabled={isConfiguring}
             onPress={
               isFirstStep
                 ? form.handleSubmit(handleStoreMonitor)
