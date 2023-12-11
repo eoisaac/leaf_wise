@@ -3,7 +3,8 @@ import time
 import ujson
 from dht import DHT11
 from machine import ADC, SoftI2C
-from src.config.pins import DHT_PIN, I2C_SCL_PIN, I2C_SDA_PIN, SOIL_PIN
+from src.config.pins import (DHT_PIN, I2C_SCL_PIN, I2C_SDA_PIN, RELAY_1_PIN,
+                             SOIL_PIN)
 from src.lib.bh1750 import BH1750
 from src.services.mqtt import MQTTService
 
@@ -50,7 +51,10 @@ def setup():
 
 
 def handle_test(topic: str, message: str):
-    print(f'test callback: {topic} - {message}')
+    if message == 'on':
+        RELAY_1_PIN.value(1)
+    elif message == 'off':
+        RELAY_1_PIN.value(0)
 
 
 def loop():
@@ -58,7 +62,7 @@ def loop():
 
     try:
         while True:
-            # mqtt_service.subscribe("env_status", handle_test)
+            mqtt_service.subscribe("relay", handle_test)
 
             env_status = get_environment_status()
             if env_status:

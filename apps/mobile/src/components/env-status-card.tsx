@@ -22,6 +22,8 @@ export const EnvStatusCard = ({ ...props }: EnvStatusCardProps) => {
 
   const displayValue = getDisplayValue(props.status.value)
   const displayName = camelCaseToWords(props.envStatusType)
+  const displayUnit = props.status.unit === 'C' ? '°C' : props.status.unit
+
   return (
     <IconContext.Provider
       value={{
@@ -43,7 +45,7 @@ export const EnvStatusCard = ({ ...props }: EnvStatusCardProps) => {
             {displayValue}
           </Text>
           <Text className="ml-1 text-lg font-bold text-neutral-500 dark:text-neutral-400">
-            {props.status.unit}
+            {displayUnit}
           </Text>
         </View>
         <Text className="text-sm font-normal text-neutral-500 dark:text-neutral-400">

@@ -40,7 +40,7 @@ export const App = () => {
       <ToastRoot>
         <Host style={{ flex: 1 }}>
           <SafeAreaProvider style={{ flex: 1 }}>
-            <StatusBar mode="light" />
+            <StatusBar mode="auto" />
             <View
               className="flex-1 bg-neutral-50 dark:bg-neutral-950"
               style={{ flex: 1 }}

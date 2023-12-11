@@ -1,10 +1,9 @@
 import time
 
-from umqtt.simple import MQTTClient
-
 from src.config.config import config
 from src.config.pins import GREEN_LED_PIN
 from src.utils.led import blink_led
+from umqtt.simple import MQTTClient
 
 
 class MQTTService:

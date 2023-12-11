@@ -69,7 +69,7 @@ class ConfigAPI:
 
             if config.store(data):
                 print("Device configured successfully!", config.load_config())
-                blink_led(GREEN_LED_PIN)
+                GREEN_LED_PIN.value(1)
                 return self._handle_response("OK", 200, {
                     "success": True,
                     "message": "Device configured successfully!"
@@ -120,6 +120,7 @@ class ConfigAPI:
                 response = self._handle_config_request(request)
                 if response:
                     conn.send(response)
+
                 conn.close()
         except Exception as e:
             print("Failed to handle request:", str(e))

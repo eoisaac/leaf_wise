@@ -25,7 +25,7 @@ export const ActuatorCard = enhance(
 
     const mqtt = useMQTT()
 
-    const postMQTT = () => mqtt.publish('test', 'actuator button pressed')
+    const toggle = () => mqtt.publish('relay', 'on')
 
     return (
       <View
@@ -62,7 +62,7 @@ export const ActuatorCard = enhance(
           description="Are you sure you want to activate this actuator?"
           confirmLabel="Activate"
           ref={confirmSheetRef}
-          onConfirm={postMQTT}
+          onConfirm={toggle}
           closeOnAction
         />
       </View>

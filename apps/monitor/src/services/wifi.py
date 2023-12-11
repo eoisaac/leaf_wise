@@ -1,7 +1,6 @@
 import time
 
 import network
-
 from src.config.pins import BLUE_LED_PIN, YELLOW_LED_PIN
 from src.utils.led import blink_led
 
@@ -69,7 +68,7 @@ class WiFiService:
             if self.is_hosting():
                 config = self.access_point_interface.ifconfig()
                 print(
-                    f"\nWiFi hosted! Network - SSID: {ssid}, IP: {config[0]} Port: {config[1]}")
+                    f"\nWiFi hosted! Network - SSID: {ssid}, IP: {config[0]}")
         except Exception as e:
             self._handle_error(e)
 

@@ -1,14 +1,33 @@
 import { Button } from '@/components/ui/button'
 import { useToast } from '@/hooks/use-toast'
+import { mergeTailwind } from '@/utils/tailwind'
+import { VariantProps, cva } from 'cva'
 import { X } from 'phosphor-react-native'
 import React from 'react'
 import { Text, View } from 'react-native'
 import Animated, { SlideInUp, SlideOutUp } from 'react-native-reanimated'
-import { SafeAreaView } from 'react-native-safe-area-context'
+import { neutral } from 'tailwindcss/colors'
 
-export interface BaseToastProps {
+const toastVariants = cva(
+  'flex-row items-center justify-between space-x-4 rounded-3xl p-4 pt-12',
+  {
+    variants: {
+      variant: {
+        neutral: 'bg-neutral-100 dark:bg-neutral-900',
+        danger: 'bg-red-500 dark:bg-red-600',
+      },
+    },
+    defaultVariants: {
+      variant: 'neutral',
+    },
+  },
+)
+
+export interface BaseToastProps extends VariantProps<typeof toastVariants> {
   title?: string
   message: string
+  closeButton?: boolean
+  className?: string
 }
 
 export interface ToastProps extends BaseToastProps {
@@ -19,7 +38,12 @@ interface ToastRootProps {
   children: React.ReactNode
 }
 
-export const Toast = ({ ...props }: ToastProps) => {
+export const Toast = ({
+  variant = 'neutral',
+  closeButton = true,
+  className,
+  ...props
+}: ToastProps) => {
   const { hideToast } = useToast()
 
   React.useEffect(() => {
@@ -36,24 +60,39 @@ export const Toast = ({ ...props }: ToastProps) => {
     <Animated.View
       entering={SlideInUp}
       exiting={SlideOutUp}
-      className="flex-row items-center justify-between space-x-4 rounded-3xl 
-      bg-neutral-100 p-4 dark:bg-neutral-900"
+      className={mergeTailwind(toastVariants({ variant, className }))}
       style={{ elevation: 1 }}
     >
       <View className="flex-1">
-        <Text className="mb-1 text-lg font-bold text-neutral-900 dark:text-neutral-100">
+        <Text
+          className={mergeTailwind(
+            'mb-1 text-lg font-bold text-neutral-900 dark:text-neutral-100',
+            {
+              'text-neutral-100': variant === 'danger',
+            },
+          )}
+        >
           {props.title}
         </Text>
-        <Text className="text-sm font-medium text-neutral-500 dark:text-neutral-400">
+        <Text
+          className={mergeTailwind(
+            'text-sm font-medium text-neutral-500 dark:text-neutral-400',
+            {
+              'text-neutral-100': variant === 'danger',
+            },
+          )}
+        >
           {props.message}
         </Text>
       </View>
-      <Button
-        variant="ghost2"
-        size="icon"
-        icon={<X weight="bold" />}
-        onPress={handleHide}
-      />
+      {closeButton && (
+        <Button
+          variant="ghost"
+          size="icon"
+          icon={<X weight="bold" color={neutral[100]} />}
+          onPress={handleHide}
+        />
+      )}
     </Animated.View>
   )
 }
@@ -63,20 +102,11 @@ export const ToastRoot = (props: ToastRootProps) => {
 
   return (
     <View className="relative flex-1">
-      <SafeAreaView
-        style={{
-          gap: 8,
-          position: 'absolute',
-          top: 64,
-          left: 16,
-          right: 16,
-          zIndex: 9999,
-        }}
-      >
+      <View className="absolute inset-x-0 top-0 z-[9999]">
         {toasts.map((toast) => (
           <Toast key={toast.id} {...toast} />
         ))}
-      </SafeAreaView>
+      </View>
       {props.children}
     </View>
   )

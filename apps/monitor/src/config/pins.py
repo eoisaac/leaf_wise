@@ -5,6 +5,9 @@ SOIL_PIN = Pin(32)
 I2C_SDA_PIN = Pin(21)
 I2C_SCL_PIN = Pin(22)
 
+RELAY_1_PIN = Pin(18, Pin.OUT)
+RELAY_2_PIN = Pin(19, Pin.OUT)
+
 BUILTIN_LED_PIN = Pin(2, Pin.OUT)
 
 BLUE_LED_PIN = Pin(13, Pin.OUT)

@@ -2,7 +2,7 @@ import { EnvStatusCard } from '@/components/env-status-card'
 import { useMQTT } from '@/hooks/use-mqtt'
 import { Drop, Leaf, Sun, Thermometer } from 'phosphor-react-native'
 import React from 'react'
-import { FlatList } from 'react-native'
+import { FlatList, View } from 'react-native'
 
 export interface EnvStatus {
   value: string
@@ -26,29 +26,10 @@ const statusIcons: Record<EnvStatusType, JSX.Element> = {
   light: <Sun />,
 }
 
-const baseData: EnvData = {
-  temperature: {
-    value: '-',
-    unit: '°C',
-  },
-  humidity: {
-    value: '-',
-    unit: '%',
-  },
-  soil_moisture: {
-    value: '-',
-    unit: '%',
-  },
-  light: {
-    value: '-',
-    unit: 'lux',
-  },
-}
-
 export const EnvStatusList = () => {
   const mqtt = useMQTT()
 
-  const [data, setData] = React.useState<EnvData>(baseData)
+  const [data, setData] = React.useState<EnvData | null>(null)
 
   const convert = (topic: string, message: string) =>
     setData(JSON.parse(message))
@@ -57,16 +38,17 @@ export const EnvStatusList = () => {
     mqtt.subscribe('env_status', convert)
   }, [mqtt])
 
-  const envData = data ?? baseData
-  const dataList = Object.entries(envData).map(([envType, status]) => ({
-    envType: envType as EnvStatusType,
-    status,
-  }))
+  const dataList = data
+    ? Object.entries(data).map(([envType, status]) => ({
+        envType: envType as EnvStatusType,
+        status,
+      }))
+    : []
 
   const fistItemIndex = 0
   const lastItemIndex = dataList.length - 1
 
-  return (
+  return data ? (
     <FlatList
       data={dataList}
       keyExtractor={(item) => item.envType}
@@ -82,5 +64,7 @@ export const EnvStatusList = () => {
       showsHorizontalScrollIndicator={false}
       horizontal
     />
+  ) : (
+    <View className="h-28 w-full" />
   )
 }

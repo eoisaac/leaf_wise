@@ -1,6 +1,5 @@
-import { MONITOR_API_TOKEN } from '@env'
+import { MONITOR_API_TOKEN, MONITOR_API_URL } from '@env'
 import axios from 'axios'
-import WifiManager from 'react-native-wifi-reborn'
 
 export interface WifiSettings {
   ssid: string
@@ -35,12 +34,10 @@ export const configureMonitorRequest = async (
   values: ConfigureMonitorRequest,
 ): Promise<ConfigureMonitorResponse> => {
   try {
-    const url = '192.168.4.1' || (await WifiManager.getIP())
-    const monitorApi = axios.create({ baseURL: `http://${url}` })
+    const monitorApi = axios.create({ baseURL: String(MONITOR_API_URL) })
     monitorApi.defaults.headers.Authorization = `Bearer ${MONITOR_API_TOKEN}`
 
     const response = await monitorApi.post('/', values)
-    console.log(response.data)
     return response.data as ConfigureMonitorResponse
   } catch (error) {
     console.error(error)
