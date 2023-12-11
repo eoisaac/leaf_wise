@@ -1,5 +1,7 @@
 import { EnvStatusCard } from '@/components/env-status-card'
+import { useMQTT } from '@/hooks/use-mqtt'
 import { Drop, Leaf, Sun, Thermometer } from 'phosphor-react-native'
+import React from 'react'
 import { FlatList } from 'react-native'
 
 export interface EnvStatus {
@@ -10,7 +12,7 @@ export interface EnvStatus {
 export type EnvStatusType =
   | 'temperature'
   | 'humidity'
-  | 'soilMoisture'
+  | 'soil_moisture'
   | 'light'
 
 export type EnvData = {
@@ -20,11 +22,11 @@ export type EnvData = {
 const statusIcons: Record<EnvStatusType, JSX.Element> = {
   temperature: <Thermometer />,
   humidity: <Drop />,
-  soilMoisture: <Leaf />,
+  soil_moisture: <Leaf />,
   light: <Sun />,
 }
 
-const data: EnvData = {
+const baseData: EnvData = {
   temperature: {
     value: '-',
     unit: '°C',
@@ -33,7 +35,7 @@ const data: EnvData = {
     value: '-',
     unit: '%',
   },
-  soilMoisture: {
+  soil_moisture: {
     value: '-',
     unit: '%',
   },
@@ -44,7 +46,19 @@ const data: EnvData = {
 }
 
 export const EnvStatusList = () => {
-  const dataList = Object.entries(data).map(([envType, status]) => ({
+  const mqtt = useMQTT()
+
+  const [data, setData] = React.useState<EnvData>(baseData)
+
+  const convert = (topic: string, message: string) =>
+    setData(JSON.parse(message))
+
+  React.useEffect(() => {
+    mqtt.subscribe('env_status', convert)
+  }, [mqtt])
+
+  const envData = data ?? baseData
+  const dataList = Object.entries(envData).map(([envType, status]) => ({
     envType: envType as EnvStatusType,
     status,
   }))

@@ -11,7 +11,10 @@
     "no-use-before-define": [
       "off",
       {
-        "classes": false
+        "functions": true,
+        "classes": false,
+        "variables": true,
+        "allowNamedExports": false
       }
     ]
   }

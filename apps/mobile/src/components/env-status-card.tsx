@@ -17,6 +17,11 @@ interface EnvStatusCardProps {
 export const EnvStatusCard = ({ ...props }: EnvStatusCardProps) => {
   const { colorScheme } = useColorScheme()
 
+  const getDisplayValue = (value: string) =>
+    value === '-' ? value : parseFloat(value).toFixed(1)
+
+  const displayValue = getDisplayValue(props.status.value)
+  const displayName = camelCaseToWords(props.envStatusType)
   return (
     <IconContext.Provider
       value={{
@@ -35,14 +40,14 @@ export const EnvStatusCard = ({ ...props }: EnvStatusCardProps) => {
         <View className="ml-1 mt-1 self-start">{props.icon}</View>
         <View className="flex-row">
           <Text className="text-4xl font-semibold text-neutral-900 dark:text-neutral-100">
-            {props.status.value}
+            {displayValue}
           </Text>
           <Text className="ml-1 text-lg font-bold text-neutral-500 dark:text-neutral-400">
             {props.status.unit}
           </Text>
         </View>
         <Text className="text-sm font-normal text-neutral-500 dark:text-neutral-400">
-          {camelCaseToWords(props.envStatusType)}
+          {displayName}
         </Text>
       </View>
     </IconContext.Provider>

@@ -1,12 +1,13 @@
 // import { useBottomSheet } from '@/components/ui/bottom-sheet'
+import { ConfirmSheet } from '@/components/confirm-sheet'
+import { useBottomSheet } from '@/components/ui/bottom-sheet'
 import { Button } from '@/components/ui/button'
 import { ActuatorModel } from '@/database/models/actuator-model'
+import { useMQTT } from '@/stores/mqtt-store'
 import { mergeTailwind } from '@/utils/tailwind'
 import { withObservables } from '@nozbe/watermelondb/react'
 import { Gear, Power } from 'phosphor-react-native'
 import { Text, View } from 'react-native'
-import { ConfirmSheet } from '@/components/confirm-sheet'
-import { useBottomSheet } from '@/components/ui/bottom-sheet'
 
 interface ActuatorCardProps {
   actuator: ActuatorModel
@@ -21,6 +22,10 @@ export const ActuatorCard = enhance(
   ({ actuator, isLast }: ActuatorCardProps) => {
     const { ref: confirmSheetRef, open: openConfirmSheet } = useBottomSheet()
     const handleDisplayConfirmSheet = () => openConfirmSheet()
+
+    const mqtt = useMQTT()
+
+    const postMQTT = () => mqtt.publish('test', 'actuator button pressed')
 
     return (
       <View
@@ -57,6 +62,7 @@ export const ActuatorCard = enhance(
           description="Are you sure you want to activate this actuator?"
           confirmLabel="Activate"
           ref={confirmSheetRef}
+          onConfirm={postMQTT}
           closeOnAction
         />
       </View>

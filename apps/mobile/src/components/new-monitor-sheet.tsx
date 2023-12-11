@@ -8,8 +8,8 @@ import { Button } from '@/components/ui/button'
 import { MonitorModel } from '@/database/models/monitor-model'
 import { actuatorRepository } from '@/database/repositories/actuator-repository'
 import { monitorRepository } from '@/database/repositories/monitor-repository'
+import { useToast } from '@/hooks/use-toast'
 import { configureMonitorRequest } from '@/services/api/requests/monitor'
-import { useToastStore } from '@/stores/toast-store'
 import { Wifi } from '@/utils/wifi'
 import {
   MONITOR_WIFI_PASSWORD,
@@ -36,7 +36,7 @@ const NewMonitorSheet = React.forwardRef<BottomSheetRef, NewMonitorSheetProps>(
     const [formStep, setFormStep] = React.useState(0)
     const isFirstStep = formStep === 0
 
-    const { showToast } = useToastStore()
+    const { showToast } = useToast()
 
     const formSchema = z.object({
       name: z.string().min(3, 'Name must be at least 3 characters'),

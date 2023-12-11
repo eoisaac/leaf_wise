@@ -6,13 +6,13 @@ interface ToastProps extends BaseToastProps {
   id: string
 }
 
-interface ToastStore {
+interface ToastState {
   toasts: ToastProps[]
   showToast: (toast: BaseToastProps) => void
   hideToast: (id: string) => void
 }
 
-export const useToastStore = create<ToastStore>()((set) => ({
+export const useToast = create<ToastState>()((set) => ({
   toasts: [],
   showToast: (toast) => {
     const newToast = { ...toast, id: uuidv4() }

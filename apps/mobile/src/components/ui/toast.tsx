@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button'
-import { useToastStore } from '@/stores/toast-store'
+import { useToast } from '@/hooks/use-toast'
 import { X } from 'phosphor-react-native'
 import React from 'react'
 import { Text, View } from 'react-native'
@@ -20,7 +20,7 @@ interface ToastRootProps {
 }
 
 export const Toast = ({ ...props }: ToastProps) => {
-  const { hideToast } = useToastStore()
+  const { hideToast } = useToast()
 
   React.useEffect(() => {
     const timer = setTimeout(() => {
@@ -59,7 +59,7 @@ export const Toast = ({ ...props }: ToastProps) => {
 }
 
 export const ToastRoot = (props: ToastRootProps) => {
-  const { toasts } = useToastStore()
+  const { toasts } = useToast()
 
   return (
     <View className="relative flex-1">
