@@ -3,8 +3,9 @@ import time
 import ujson
 from dht import DHT11
 from machine import ADC, SoftI2C
+from src.config.config import config
 from src.config.pins import (DHT_PIN, I2C_SCL_PIN, I2C_SDA_PIN, RELAY_1_PIN,
-                             SOIL_PIN)
+                             RELAY_2_PIN, SOIL_PIN)
 from src.lib.bh1750 import BH1750
 from src.services.mqtt import MQTTService
 
@@ -50,19 +51,32 @@ def setup():
     mqtt_service.connect()
 
 
-def handle_test(topic: str, message: str):
-    if message == 'on':
-        RELAY_1_PIN.value(1)
-    elif message == 'off':
-        RELAY_1_PIN.value(0)
+RELAY_1_ID = config.get('actuators').get('0')
+RELAY_2_ID = config.get('actuators').get('1')
+
+
+def handle_actuator(topic: str, message: str):
+    relay_pins = {RELAY_1_ID: RELAY_1_PIN, RELAY_2_ID: RELAY_2_PIN}
+
+    if topic in relay_pins:
+        pin = relay_pins[topic]
+        if message == "on":
+            print(f"Turning ON {topic}")
+            pin.value(1)
+        elif message == "off":
+            print(f"Turning OFF {topic}")
+            pin.value(0)
+    else:
+        print("Unknown actuator")
 
 
 def loop():
-    prev_payload = ""
-
     try:
+        prev_payload = ""
+
         while True:
-            mqtt_service.subscribe("relay", handle_test)
+            mqtt_service.subscribe(RELAY_1_ID, handle_actuator)
+            mqtt_service.subscribe(RELAY_2_ID, handle_actuator)
 
             env_status = get_environment_status()
             if env_status:
@@ -70,7 +84,7 @@ def loop():
                 env_status = ujson.dumps(env_status)
                 if env_status != prev_payload:
                     prev_payload = env_status
-                    mqtt_service.publish("env_status", env_status)
+                    mqtt_service.publish(config.get('id'), env_status)
 
             time.sleep(2)
 

@@ -38,7 +38,7 @@ export const EnvStatusList = () => {
   React.useEffect(() => {
     if (!selectedMonitor) return
     mqtt.subscribe(selectedMonitor.id, convert)
-  }, [mqtt])
+  }, [mqtt, selectedMonitor])
 
   const dataList = data
     ? Object.entries(data).map(([envType, status]) => ({

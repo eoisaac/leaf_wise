@@ -8,12 +8,14 @@
     "clsx",
     "hookform",
     "Modalize",
+    "mqtt",
     "nativewind",
     "nozbe",
     "paho",
     "portalize",
     "rocketseat",
     "tailwindcss",
+    "ujson",
     "uuidv",
     "watermelondb"
   ]

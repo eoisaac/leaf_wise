@@ -3,18 +3,21 @@ import { ConfirmSheet } from '@/components/confirm-sheet'
 import { StackScreen } from '@/components/layouts/stack-screen'
 import { useBottomSheet } from '@/components/ui/bottom-sheet'
 import { Button } from '@/components/ui/button'
+import { useMonitor } from '@/contexts/monitor-context'
 import { watermelonDB } from '@/database/watermelon'
 import { View } from 'react-native'
 
 export const PreferencesScreen = ({ navigation }: AllMonitorsScreenProps) => {
   const { ref, open } = useBottomSheet()
+  const { flushMonitors } = useMonitor()
 
   const handleOpenConfirmSheet = () => open()
 
   const flushDB = async () => {
-    await watermelonDB.write(
-      async () => await watermelonDB.unsafeResetDatabase(),
-    )
+    await watermelonDB.write(async () => {
+      await watermelonDB.unsafeResetDatabase()
+      flushMonitors()
+    })
   }
 
   return (

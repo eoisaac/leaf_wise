@@ -6,7 +6,7 @@ import { ActuatorModel } from '@/database/models/actuator-model'
 import { useMQTT } from '@/hooks/use-mqtt'
 import { mergeTailwind } from '@/utils/tailwind'
 import { withObservables } from '@nozbe/watermelondb/react'
-import { Gear, Power } from 'phosphor-react-native'
+import { Coffee, Gear, Power } from 'phosphor-react-native'
 import { Text, View } from 'react-native'
 
 interface ActuatorCardProps {
@@ -25,7 +25,8 @@ export const ActuatorCard = enhance(
 
     const mqtt = useMQTT()
 
-    const toggle = () => mqtt.publish('relay', 'on')
+    const toggleOn = () => mqtt.publish(actuator.id, 'on')
+    const toggleOff = () => mqtt.publish(actuator.id, 'off')
 
     return (
       <View
@@ -52,6 +53,12 @@ export const ActuatorCard = enhance(
           <Button
             variant="primary"
             size="icon"
+            icon={<Coffee weight="bold" />}
+            onPress={toggleOff}
+          />
+          <Button
+            variant="primary"
+            size="icon"
             icon={<Power weight="bold" />}
             onPress={handleDisplayConfirmSheet}
           />
@@ -62,7 +69,7 @@ export const ActuatorCard = enhance(
           description="Are you sure you want to activate this actuator?"
           confirmLabel="Activate"
           ref={confirmSheetRef}
-          onConfirm={toggle}
+          onConfirm={toggleOn}
           closeOnAction
         />
       </View>
