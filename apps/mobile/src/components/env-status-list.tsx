@@ -1,4 +1,5 @@
 import { EnvStatusCard } from '@/components/env-status-card'
+import { useMonitor } from '@/contexts/monitor-context'
 import { useMQTT } from '@/hooks/use-mqtt'
 import { Drop, Leaf, Sun, Thermometer } from 'phosphor-react-native'
 import React from 'react'
@@ -28,14 +29,15 @@ const statusIcons: Record<EnvStatusType, JSX.Element> = {
 
 export const EnvStatusList = () => {
   const mqtt = useMQTT()
+  const { selectedMonitor } = useMonitor()
 
   const [data, setData] = React.useState<EnvData | null>(null)
 
-  const convert = (topic: string, message: string) =>
-    setData(JSON.parse(message))
+  const convert = (_: string, message: string) => setData(JSON.parse(message))
 
   React.useEffect(() => {
-    mqtt.subscribe('env_status', convert)
+    if (!selectedMonitor) return
+    mqtt.subscribe(selectedMonitor.id, convert)
   }, [mqtt])
 
   const dataList = data

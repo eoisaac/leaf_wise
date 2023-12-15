@@ -12,9 +12,9 @@ export const PreferencesScreen = ({ navigation }: AllMonitorsScreenProps) => {
   const handleOpenConfirmSheet = () => open()
 
   const flushDB = async () => {
-    await watermelonDB.write(async () => {
-      await watermelonDB.unsafeResetDatabase()
-    })
+    await watermelonDB.write(
+      async () => await watermelonDB.unsafeResetDatabase(),
+    )
   }
 
   return (

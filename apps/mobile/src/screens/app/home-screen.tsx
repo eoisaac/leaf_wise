@@ -2,22 +2,12 @@ import { HomeScreenProps } from '@/@types/routes'
 import { HomeHeader } from '@/components/home-header'
 import { MonitorCreation } from '@/components/monitor-creation'
 import { SelectedMonitorDetails } from '@/components/selected-monitor-details'
-import { MonitorModel } from '@/database/models/monitor-model'
-import { monitorRepository } from '@/database/repositories/monitor-repository'
-import React from 'react'
+import { useMonitor } from '@/contexts/monitor-context'
 import { Text, View } from 'react-native'
 import { version } from '../../../package.json'
 
 export const HomeScreen = ({ navigation }: HomeScreenProps) => {
-  const [selectedMonitor, setSelectedMonitor] =
-    React.useState<MonitorModel | null>(null)
-
-  React.useEffect(() => {
-    const subscription = monitorRepository
-      .observeSelected()
-      .subscribe((monitors) => setSelectedMonitor(monitors[0] ?? null))
-    return () => subscription.unsubscribe()
-  }, [])
+  const { selectedMonitor } = useMonitor()
 
   const navigateToAllMonitors = () => navigation.navigate('AllMonitorsScreen')
   const navigateToPreferences = () => navigation.navigate('PreferencesScreen')

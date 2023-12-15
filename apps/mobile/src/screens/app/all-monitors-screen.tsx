@@ -5,15 +5,15 @@ import { MonitorCreation } from '@/components/monitor-creation'
 import { NotFoundMessage } from '@/components/not-found-message'
 import { Input } from '@/components/ui/input'
 import { StatusBar } from '@/components/ui/status-bar'
-import { MonitorModel } from '@/database/models/monitor-model'
-import { monitorRepository } from '@/database/repositories/monitor-repository'
+import { useMonitor } from '@/contexts/monitor-context'
 import { Plus } from 'phosphor-react-native'
 import React from 'react'
 import { FlatList, View } from 'react-native'
 
 export const AllMonitorsScreen = ({ navigation }: PreferencesScreenProps) => {
-  const [monitors, setMonitors] = React.useState<MonitorModel[]>([])
   const [search, setSearch] = React.useState('')
+
+  const { monitors } = useMonitor()
 
   const filteredMonitors = monitors.filter((monitor) =>
     monitor.name.toLowerCase().includes(search.toLowerCase()),
@@ -22,13 +22,6 @@ export const AllMonitorsScreen = ({ navigation }: PreferencesScreenProps) => {
   const lastCardIndex = filteredMonitors.length - 1
 
   const handleSearchChange = (text: string) => setSearch(text)
-
-  React.useEffect(() => {
-    const subscription = monitorRepository
-      .observeAll()
-      .subscribe((monitors) => setMonitors(monitors))
-    return () => subscription.unsubscribe()
-  }, [])
 
   return (
     <>
