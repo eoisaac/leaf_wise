@@ -11,11 +11,10 @@ interface HomeHeaderProps {
   onButtonPress?: () => void
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const HomeHeader = ({ onButtonPress }: HomeHeaderProps) => {
   const { colorScheme } = useColorScheme()
 
-  const usernameDisplay = 'Isaac'
+  // const usernameDisplay = 'Isaac'
 
   return (
     <View>
@@ -27,7 +26,8 @@ export const HomeHeader = ({ onButtonPress }: HomeHeaderProps) => {
       >
         <View>
           <Text className="text-4xl font-bold text-neutral-100">
-            Hi, {usernameDisplay}
+            {/* Hi, {usernameDisplay} */}
+            LeafWise
           </Text>
           <Text className="text-lg text-neutral-100">Manage your plants</Text>
         </View>

@@ -36,7 +36,7 @@ export const EnvStatusList = () => {
   const convert = (_: string, message: string) => setData(JSON.parse(message))
 
   React.useEffect(() => {
-    if (!selectedMonitor) return
+    if (!selectedMonitor) return setData(null)
     mqtt.subscribe(selectedMonitor.id, convert)
   }, [mqtt, selectedMonitor])
 

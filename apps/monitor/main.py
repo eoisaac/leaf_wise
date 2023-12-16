@@ -72,8 +72,8 @@ def handle_actuator(topic: str, message: str):
 
 def loop():
     try:
-        prev_payload = ""
 
+        prev_payload = ""
         while True:
             mqtt_service.subscribe(RELAY_1_ID, handle_actuator)
             mqtt_service.subscribe(RELAY_2_ID, handle_actuator)
