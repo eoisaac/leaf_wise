@@ -19,6 +19,7 @@ export const schemas = appSchema({
       name: 'actuators',
       columns: [
         { name: 'name', type: 'string' },
+        { name: 'is_active', type: 'boolean', isOptional: true },
         { name: 'created_at', type: 'number' },
         { name: 'updated_at', type: 'number' },
         { name: 'monitor_id', type: 'string', isIndexed: true },

@@ -65,10 +65,12 @@ const NewMonitorSheet = React.forwardRef<BottomSheetRef, NewMonitorSheetProps>(
         await actuatorRepository.create({
           monitorId: created.id,
           name: 'Actuator 1',
+          isActive: false,
         })
         await actuatorRepository.create({
           monitorId: created.id,
           name: 'Actuator 2',
+          isActive: false,
         })
       } else {
         const updated = await monitorRepository.update(monitor.id, values)

@@ -61,10 +61,10 @@ def handle_actuator(topic: str, message: str):
     if topic in relay_pins:
         pin = relay_pins[topic]
         if message == "on":
-            print(f"Turning ON {topic}")
+            print(f"Turning ON: {topic}")
             pin.value(1)
         elif message == "off":
-            print(f"Turning OFF {topic}")
+            print(f"Turning OFF: {topic}")
             pin.value(0)
     else:
         print("Unknown actuator")
@@ -85,8 +85,6 @@ def loop():
                 if env_status != prev_payload:
                     prev_payload = env_status
                     mqtt_service.publish(config.get('id'), env_status)
-
-            time.sleep(2)
 
     except KeyboardInterrupt:
         print('Bye! :/')

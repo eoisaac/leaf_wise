@@ -6,8 +6,9 @@ import { ActuatorModel } from '@/database/models/actuator-model'
 import { useMQTT } from '@/hooks/use-mqtt'
 import { mergeTailwind } from '@/utils/tailwind'
 import { withObservables } from '@nozbe/watermelondb/react'
-import { Coffee, Gear, Power } from 'phosphor-react-native'
+import { Gear, Power } from 'phosphor-react-native'
 import { Text, View } from 'react-native'
+import { neutral } from 'tailwindcss/colors'
 
 interface ActuatorCardProps {
   actuator: ActuatorModel
@@ -25,17 +26,18 @@ export const ActuatorCard = enhance(
 
     const mqtt = useMQTT()
 
-    const toggleOn = () => mqtt.publish(actuator.id, 'on')
-    const toggleOff = () => mqtt.publish(actuator.id, 'off')
+    const handleToggle = () => {
+      const newState = !actuator.isActive
+      mqtt.publish(actuator.id, newState ? 'on' : 'off')
+      actuator.setActive(newState)
+    }
 
     return (
       <View
         className={mergeTailwind(
           `mb-2 mt-2 flex-row items-center justify-between rounded-3xl
       border-2 border-transparent bg-neutral-100 p-4 dark:bg-neutral-900`,
-          {
-            'mb-8': isLast,
-          },
+          { 'mb-8': isLast },
         )}
         style={{ elevation: 1 }}
       >
@@ -51,25 +53,23 @@ export const ActuatorCard = enhance(
         <View className="flex-row gap-2">
           <Button variant="ghost2" size="icon" icon={<Gear weight="bold" />} />
           <Button
-            variant="primary"
+            variant={actuator.isActive ? 'danger' : 'primary'}
             size="icon"
-            icon={<Coffee weight="bold" />}
-            onPress={toggleOff}
-          />
-          <Button
-            variant="primary"
-            size="icon"
-            icon={<Power weight="bold" />}
+            icon={<Power weight="bold" color={neutral[100]} />}
             onPress={handleDisplayConfirmSheet}
           />
         </View>
 
         <ConfirmSheet
-          title={`Activate ${actuator.name}?`}
-          description="Are you sure you want to activate this actuator?"
-          confirmLabel="Activate"
+          title={`${actuator.isActive ? 'Deactivate' : 'Activate'} ${
+            actuator.name
+          }?`}
+          description={`Are you sure you want to ${
+            actuator.isActive ? 'deactivate' : 'activate'
+          } this actuator?`}
+          confirmLabel={actuator.isActive ? 'Deactivate' : 'Activate'}
           ref={confirmSheetRef}
-          onConfirm={toggleOn}
+          onConfirm={handleToggle}
           closeOnAction
         />
       </View>
