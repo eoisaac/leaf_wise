@@ -14,6 +14,7 @@ interface MQTTState {
   callbacks: Map<string, MQTTCallback>
 
   connect: (config: MQTTConfig) => void
+  disconnect: () => void
   subscribe: (topic: string, callback?: MQTTCallback) => void
   unsubscribe: (topic: string) => void
   publish: (topic: string, message: string) => void
@@ -45,6 +46,15 @@ export const useMQTT = create<MQTTState>()((set, get) => ({
     client.onMessageArrived = (message) => {
       const callback = get().callbacks.get(message.destinationName)
       if (callback) callback(message.destinationName, message.payloadString)
+    }
+  },
+
+  disconnect: () => {
+    const client = get().client
+    if (client) {
+      client.disconnect()
+      set({ client: null })
+      console.log('[MQTT] disconnected')
     }
   },
 

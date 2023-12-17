@@ -5,8 +5,10 @@ import { useBottomSheet } from '@/components/ui/bottom-sheet'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { useMonitor } from '@/contexts/monitor-context'
+import { preferencesRepository } from '@/database/repositories/preferences-repository'
 import { watermelonDB } from '@/database/watermelon'
-import { MQTT_HOST } from '@env'
+import { useMQTT } from '@/hooks/use-mqtt'
+import { MQTT_CLIENT_ID, MQTT_HOST, MQTT_WS_PORT } from '@env'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Controller, useForm } from 'react-hook-form'
 import { Text, View } from 'react-native'
@@ -16,19 +18,31 @@ export const PreferencesScreen = ({ navigation }: AllMonitorsScreenProps) => {
   const { ref, open } = useBottomSheet()
   const { flushMonitors } = useMonitor()
 
+  const mqtt = useMQTT()
+
   const formSchema = z.object({
-    mqttHost: z.string().min(13, 'Host must be at least 13 characters'),
+    mqttHost: z.string().min(3, 'Host must be at least 3 characters'),
   })
   type FormValues = z.infer<typeof formSchema>
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
-    defaultValues: { mqttHost: String(MQTT_HOST) },
+    defaultValues: async () => {
+      const preferences = await preferencesRepository.get()
+      return { mqttHost: preferences?.mqttHost ?? String(MQTT_HOST) }
+    },
   })
   const { errors } = form.formState
 
   const handleSubmit = async (values: FormValues) => {
-    console.log(values)
+    await preferencesRepository.set({ mqttHost: values.mqttHost })
+
+    if (mqtt.isConnected()) mqtt.disconnect()
+    mqtt.connect({
+      host: values.mqttHost,
+      port: Number(MQTT_WS_PORT),
+      clientId: String(MQTT_CLIENT_ID),
+    })
   }
 
   const handleOpenConfirmSheet = () => open()

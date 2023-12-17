@@ -18,6 +18,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { Host } from 'react-native-portalize'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { MonitorContextProvider } from './contexts/monitor-context'
+import { preferencesRepository } from './database/repositories/preferences-repository'
 
 export const App = () => {
   const [fontsLoaded] = useFonts({
@@ -29,11 +30,19 @@ export const App = () => {
 
   const mqtt = useMQTT()
   React.useEffect(() => {
-    mqtt.connect({
-      host: String(MQTT_HOST),
-      port: Number(MQTT_WS_PORT),
-      clientId: String(MQTT_CLIENT_ID),
-    })
+    ;(async () => {
+      const preferences = await preferencesRepository.get()
+      const DEFAULT_HOST = String(MQTT_HOST)
+
+      mqtt.connect({
+        host: preferences?.mqttHost ?? DEFAULT_HOST,
+        port: Number(MQTT_WS_PORT),
+        clientId: String(MQTT_CLIENT_ID),
+      })
+
+      if (!preferences)
+        await preferencesRepository.set({ mqttHost: DEFAULT_HOST })
+    })()
   }, [])
 
   return (
