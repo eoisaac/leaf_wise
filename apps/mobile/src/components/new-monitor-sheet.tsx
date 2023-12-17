@@ -8,14 +8,18 @@ import { Button } from '@/components/ui/button'
 import { MonitorModel } from '@/database/models/monitor-model'
 import { actuatorRepository } from '@/database/repositories/actuator-repository'
 import { monitorRepository } from '@/database/repositories/monitor-repository'
+import { preferencesRepository } from '@/database/repositories/preferences-repository'
+import { useMQTT } from '@/hooks/use-mqtt'
 import { useToast } from '@/hooks/use-toast'
 import { configureMonitorRequest } from '@/services/api/requests/monitor'
 import { Wifi } from '@/utils/wifi'
 import {
   MONITOR_WIFI_PASSWORD,
   MONITOR_WIFI_SSID,
+  MQTT_CLIENT_ID,
   MQTT_HOST,
   MQTT_PORT,
+  MQTT_WS_PORT,
 } from '@env'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Gear } from 'phosphor-react-native'
@@ -37,6 +41,7 @@ const NewMonitorSheet = React.forwardRef<BottomSheetRef, NewMonitorSheetProps>(
     const isFirstStep = formStep === 0
 
     const { showToast } = useToast()
+    const mqtt = useMQTT()
 
     const formSchema = z.object({
       name: z.string().min(3, 'Name must be at least 3 characters'),
@@ -107,6 +112,10 @@ const NewMonitorSheet = React.forwardRef<BottomSheetRef, NewMonitorSheetProps>(
         }
 
         const [act0, act1] = await monitor!.getActuators()
+        console.log(`Default MQTT host: ${MQTT_HOST}`)
+
+        const preferences = await preferencesRepository.get()
+        const DEFAULT_HOST = String(MQTT_HOST)
         const response = await configureMonitorRequest({
           id: monitor!.id,
           wifi: {
@@ -114,7 +123,7 @@ const NewMonitorSheet = React.forwardRef<BottomSheetRef, NewMonitorSheetProps>(
             password: monitor!.wifiPassword ?? '',
           },
           mqtt: {
-            host: String(MQTT_HOST),
+            host: preferences?.mqttHost ?? DEFAULT_HOST,
             port: Number(MQTT_PORT),
             password: '',
             username: '',
@@ -126,10 +135,18 @@ const NewMonitorSheet = React.forwardRef<BottomSheetRef, NewMonitorSheetProps>(
           monitor?.setSynced()
           isFirstMonitor && monitor?.setSelected()
 
+          if (mqtt.isConnected()) mqtt.disconnect()
+          mqtt.connect({
+            host: preferences?.mqttHost ?? DEFAULT_HOST,
+            port: Number(MQTT_WS_PORT),
+            clientId: String(MQTT_CLIENT_ID),
+          })
+
           showToast({
             title: 'Monitor configured',
             message: response.message,
           })
+
           return handleResetSheet()
         }
       } catch (error) {

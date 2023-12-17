@@ -34,6 +34,7 @@ export const configureMonitorRequest = async (
   values: ConfigureMonitorRequest,
 ): Promise<ConfigureMonitorResponse> => {
   try {
+    console.log(`Sending config to: ${MONITOR_API_URL}`)
     const monitorApi = axios.create({ baseURL: String(MONITOR_API_URL) })
     monitorApi.defaults.headers.Authorization = `Bearer ${MONITOR_API_TOKEN}`
 
