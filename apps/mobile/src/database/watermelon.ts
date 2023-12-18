@@ -6,6 +6,7 @@ import SQLiteAdapter from '@nozbe/watermelondb/adapters/sqlite'
 import { setGenerator } from '@nozbe/watermelondb/utils/common/randomId'
 import 'react-native-get-random-values'
 import { v4 as uuidv4 } from 'uuid'
+import { EnvStatusModel } from './models/env-status-model'
 
 export const adapter = new SQLiteAdapter({
   schema: schemas,
@@ -13,7 +14,7 @@ export const adapter = new SQLiteAdapter({
 
 export const watermelonDB = new Database({
   adapter,
-  modelClasses: [MonitorModel, ActuatorModel],
+  modelClasses: [MonitorModel, ActuatorModel, EnvStatusModel],
 })
 
 setGenerator(() => uuidv4())

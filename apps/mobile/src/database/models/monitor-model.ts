@@ -14,6 +14,7 @@ export class MonitorModel extends Model {
   static table = 'monitors'
   static associations: Associations = {
     actuators: { type: 'has_many', foreignKey: 'monitor_id' },
+    envStatuses: { type: 'has_many', foreignKey: 'monitor_id' },
   }
 
   @field('name') name!: string
