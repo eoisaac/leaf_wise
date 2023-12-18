@@ -8,6 +8,7 @@ import {
   readonly,
   writer,
 } from '@nozbe/watermelondb/decorators'
+import { EnvStatusModel } from './env-status-model'
 
 export class MonitorModel extends Model {
   static table = 'monitors'
@@ -25,6 +26,7 @@ export class MonitorModel extends Model {
   @readonly @date('updated_at') updatedAt!: number
 
   @children('actuators') actuators: ActuatorModel[]
+  @children('env_statuses') envStatuses: EnvStatusModel[]
 
   @writer async setSelected(isSelected: boolean = true) {
     const stored = await this.database

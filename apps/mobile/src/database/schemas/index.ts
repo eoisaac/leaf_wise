@@ -25,5 +25,17 @@ export const schemas = appSchema({
         { name: 'monitor_id', type: 'string', isIndexed: true },
       ],
     }),
+    tableSchema({
+      name: 'actuators',
+      columns: [
+        { name: 'temperature', type: 'string' },
+        { name: 'humidity', type: 'string' },
+        { name: 'soil_moisture', type: 'string' },
+        { name: 'light', type: 'string' },
+        { name: 'created_at', type: 'number' },
+        { name: 'updated_at', type: 'number' },
+        { name: 'monitor_id', type: 'string', isIndexed: true },
+      ],
+    }),
   ],
 })
