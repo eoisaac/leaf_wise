@@ -41,7 +41,7 @@ export const EnvStatusList = () => {
 
     envStatusRepository.create({
       humidity: parsed.humidity.value,
-      soilMoisture: parsed.humidity.value,
+      soilMoisture: parsed.soil_moisture.value,
       temperature: parsed.temperature.value,
       light: parsed.light.value,
       monitorId: selectedMonitor!.id,

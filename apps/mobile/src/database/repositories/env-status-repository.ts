@@ -10,6 +10,7 @@ const create = async (status: NewEnvStatusSchema): Promise<EnvStatusModel> => {
   return await watermelonDB.write(async () => {
     return await watermelonDB.get<EnvStatusModel>(TABLE_NAME).create((data) => {
       data.humidity = status.humidity
+      data.temperature = status.temperature
       data.soilMoisture = status.soilMoisture
       data.light = status.light
       data.monitorId = status.monitorId
