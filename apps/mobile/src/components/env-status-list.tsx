@@ -1,5 +1,6 @@
 import { EnvStatusCard } from '@/components/env-status-card'
 import { useMonitor } from '@/contexts/monitor-context'
+import { envStatusRepository } from '@/database/repositories/env-status-repository'
 import { useMQTT } from '@/hooks/use-mqtt'
 import { Drop, Leaf, Sun, Thermometer } from 'phosphor-react-native'
 import React from 'react'
@@ -33,7 +34,18 @@ export const EnvStatusList = () => {
 
   const [data, setData] = React.useState<EnvData | null>(null)
 
-  const convert = (_: string, message: string) => setData(JSON.parse(message))
+  const convert = (_: string, message: string) => {
+    if (!selectedMonitor) return
+    const parsed = JSON.parse(message) as EnvData
+    setData(parsed)
+    envStatusRepository.create({
+      humidity: parsed.humidity.value,
+      soilMoisture: parsed.humidity.value,
+      temperature: parsed.temperature.value,
+      light: parsed.light.value,
+      monitorId: selectedMonitor!.id,
+    })
+  }
 
   React.useEffect(() => {
     if (!selectedMonitor) return setData(null)

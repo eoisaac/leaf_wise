@@ -13,6 +13,7 @@ interface SelectedMonitorDetailsProps {
   monitor: MonitorModel
   actuators: ActuatorModel[]
   onSeeAllPress: () => void
+  onInfoPress: () => void
 }
 
 const enhance = withObservables(['monitor'], ({ monitor }) => ({
@@ -21,7 +22,12 @@ const enhance = withObservables(['monitor'], ({ monitor }) => ({
 }))
 
 export const SelectedMonitorDetails = enhance(
-  ({ monitor, actuators, onSeeAllPress }: SelectedMonitorDetailsProps) => {
+  ({
+    monitor,
+    actuators,
+    onSeeAllPress,
+    onInfoPress,
+  }: SelectedMonitorDetailsProps) => {
     const colorScheme = useColorScheme()
     const iconColor = colorScheme === 'dark' ? lime[500] : lime[400]
 
@@ -46,7 +52,7 @@ export const SelectedMonitorDetails = enhance(
             </Button>
           </View>
 
-          <MonitorCard monitor={monitor} />
+          <MonitorCard monitor={monitor} onInfoPress={onInfoPress} />
         </View>
 
         <View className="flex-1 px-8">

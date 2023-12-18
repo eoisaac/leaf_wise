@@ -5,6 +5,7 @@ export type AppStackRoutes = {
   HomeScreen: undefined
   AllMonitorsScreen: undefined
   PreferencesScreen: undefined
+  MonitorScreen: { monitorId: string }
 }
 
 export type AppNavigationProp = StackNavigationProp<AppStackRoutes>
@@ -17,4 +18,8 @@ export type AllMonitorsScreenProps = StackScreenProps<
 export type PreferencesScreenProps = StackScreenProps<
   AppStackRoutes,
   'PreferencesScreen'
+>
+export type MonitorScreenProps = StackScreenProps<
+  AppStackRoutes,
+  'MonitorScreen'
 >

@@ -11,6 +11,10 @@ export const HomeScreen = ({ navigation }: HomeScreenProps) => {
 
   const navigateToAllMonitors = () => navigation.navigate('AllMonitorsScreen')
   const navigateToPreferences = () => navigation.navigate('PreferencesScreen')
+  const navigateToMonitorScreen = () =>
+    navigation.navigate('MonitorScreen', {
+      monitorId: selectedMonitor!.id,
+    })
 
   return (
     <View className="relative z-10 flex-1 bg-neutral-50 dark:bg-neutral-950">
@@ -21,6 +25,7 @@ export const HomeScreen = ({ navigation }: HomeScreenProps) => {
           <SelectedMonitorDetails
             monitor={selectedMonitor}
             onSeeAllPress={navigateToAllMonitors}
+            onInfoPress={navigateToMonitorScreen}
           />
         </View>
       ) : (

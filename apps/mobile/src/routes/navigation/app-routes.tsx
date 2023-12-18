@@ -1,6 +1,7 @@
 import { AppStackRoutes } from '@/@types/routes'
 import { AllMonitorsScreen } from '@/screens/app/all-monitors-screen'
 import { HomeScreen } from '@/screens/app/home-screen'
+import { MonitorScreen } from '@/screens/app/monitor-screen'
 import { PreferencesScreen } from '@/screens/app/preferences-screen'
 import { createStackNavigator } from '@react-navigation/stack'
 
@@ -17,6 +18,7 @@ export const AppRoutes = () => {
       <Screen name="HomeScreen" component={HomeScreen} />
       <Screen name="AllMonitorsScreen" component={AllMonitorsScreen} />
       <Screen name="PreferencesScreen" component={PreferencesScreen} />
+      <Screen name="MonitorScreen" component={MonitorScreen} />
     </Navigator>
   )
 }

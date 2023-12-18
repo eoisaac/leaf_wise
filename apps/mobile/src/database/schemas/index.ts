@@ -26,7 +26,7 @@ export const schemas = appSchema({
       ],
     }),
     tableSchema({
-      name: 'actuators',
+      name: 'env_statuses',
       columns: [
         { name: 'temperature', type: 'string' },
         { name: 'humidity', type: 'string' },

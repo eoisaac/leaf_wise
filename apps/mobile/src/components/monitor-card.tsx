@@ -1,16 +1,17 @@
+import { ConfirmSheet } from '@/components/confirm-sheet'
+import { useBottomSheet } from '@/components/ui/bottom-sheet'
 import { Button } from '@/components/ui/button'
 import { MonitorModel } from '@/database/models/monitor-model'
 import { mergeTailwind } from '@/utils/tailwind'
 import { withObservables } from '@nozbe/watermelondb/react'
 import { CaretRight, Info } from 'phosphor-react-native'
 import { Text, View } from 'react-native'
-import { ConfirmSheet } from '@/components/confirm-sheet'
-import { useBottomSheet } from '@/components/ui/bottom-sheet'
 
 interface MonitorCardProps {
   monitor: MonitorModel
   isLast?: boolean
   className?: string
+  onInfoPress?: () => void
 }
 
 const enhance = withObservables(['monitor'], ({ monitor }) => ({
@@ -18,7 +19,7 @@ const enhance = withObservables(['monitor'], ({ monitor }) => ({
 }))
 
 export const MonitorCard = enhance(
-  ({ monitor, isLast = false, className }: MonitorCardProps) => {
+  ({ monitor, isLast = false, className, onInfoPress }: MonitorCardProps) => {
     const { ref, open } = useBottomSheet()
 
     const handleOpenConfirmSheet = () => open()
@@ -26,6 +27,7 @@ export const MonitorCard = enhance(
     const monitorDisplayId = monitor.id.slice(0, 13)
 
     const handleSelectMonitor = () => monitor.setSelected(true)
+    const handleInfoPress = () => onInfoPress?.()
 
     return (
       <>
@@ -55,6 +57,7 @@ export const MonitorCard = enhance(
               variant="ghost2"
               size="icon"
               icon={<Info weight="bold" />}
+              onPress={handleInfoPress}
             />
           ) : (
             <Button
