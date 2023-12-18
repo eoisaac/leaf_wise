@@ -17,8 +17,7 @@ interface EnvStatusCardProps {
 export const EnvStatusCard = ({ ...props }: EnvStatusCardProps) => {
   const { colorScheme } = useColorScheme()
 
-  const getDisplayValue = (value: string) =>
-    value === '-' ? value : parseFloat(value).toFixed(1)
+  const getDisplayValue = (value: number) => (value ? value.toFixed(0) : '-')
 
   const displayValue = getDisplayValue(props.status.value)
   const displayName = camelCaseToWords(props.envStatusType)

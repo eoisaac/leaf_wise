@@ -8,6 +8,7 @@ interface StackScreenProps {
   name?: string
   children: React.ReactNode
   navigation?: NavigationProp<Record<string, object | undefined>>
+  action?: JSX.Element
 }
 
 export const StackScreen = ({ navigation, ...props }: StackScreenProps) => {
@@ -31,6 +32,7 @@ export const StackScreen = ({ navigation, ...props }: StackScreenProps) => {
             {props.name}
           </Text>
         )}
+        {props.action && props.action}
       </View>
       <View className="relative flex-1 p-8">{props.children}</View>
     </SafeScreen>

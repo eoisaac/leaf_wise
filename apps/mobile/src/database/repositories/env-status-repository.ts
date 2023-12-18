@@ -17,6 +17,15 @@ const create = async (status: NewEnvStatusSchema): Promise<EnvStatusModel> => {
   })
 }
 
+const flush = async (monitorId: string): Promise<void> => {
+  return await watermelonDB.write(async () => {
+    return await watermelonDB
+      .get<EnvStatusModel>(TABLE_NAME)
+      .query(Q.where('monitor_id', monitorId))
+      .destroyAllPermanently()
+  })
+}
+
 const observeMonitorEnvStatuses = (
   monitorId: string,
 ): Observable<EnvStatusModel[]> => {
@@ -28,5 +37,6 @@ const observeMonitorEnvStatuses = (
 
 export const envStatusRepository = {
   create,
+  flush,
   observeMonitorEnvStatuses,
 }

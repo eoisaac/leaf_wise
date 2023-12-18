@@ -1,10 +1,10 @@
 import { z } from 'zod'
 
 const zNewEnvStatus = z.object({
-  temperature: z.string(),
-  humidity: z.string(),
-  soilMoisture: z.string(),
-  light: z.string(),
+  temperature: z.number(),
+  humidity: z.number(),
+  soilMoisture: z.number(),
+  light: z.number(),
   monitorId: z.string(),
 })
 type NewEnvStatusSchema = z.infer<typeof zNewEnvStatus>

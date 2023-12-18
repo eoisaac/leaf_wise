@@ -28,10 +28,10 @@ export const schemas = appSchema({
     tableSchema({
       name: 'env_statuses',
       columns: [
-        { name: 'temperature', type: 'string' },
-        { name: 'humidity', type: 'string' },
-        { name: 'soil_moisture', type: 'string' },
-        { name: 'light', type: 'string' },
+        { name: 'temperature', type: 'number' },
+        { name: 'humidity', type: 'number' },
+        { name: 'soil_moisture', type: 'number' },
+        { name: 'light', type: 'number' },
         { name: 'created_at', type: 'number' },
         { name: 'updated_at', type: 'number' },
         { name: 'monitor_id', type: 'string', isIndexed: true },

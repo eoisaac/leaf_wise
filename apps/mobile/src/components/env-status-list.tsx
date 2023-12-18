@@ -7,8 +7,8 @@ import React from 'react'
 import { FlatList, View } from 'react-native'
 
 export interface EnvStatus {
-  value: string
   unit: string
+  value: number
 }
 
 export type EnvStatusType =
@@ -21,7 +21,7 @@ export type EnvData = {
   [K in EnvStatusType]: EnvStatus
 }
 
-const statusIcons: Record<EnvStatusType, JSX.Element> = {
+export const statusIcons: Record<EnvStatusType, JSX.Element> = {
   temperature: <Thermometer />,
   humidity: <Drop />,
   soil_moisture: <Leaf />,
@@ -38,6 +38,7 @@ export const EnvStatusList = () => {
     if (!selectedMonitor) return
     const parsed = JSON.parse(message) as EnvData
     setData(parsed)
+
     envStatusRepository.create({
       humidity: parsed.humidity.value,
       soilMoisture: parsed.humidity.value,

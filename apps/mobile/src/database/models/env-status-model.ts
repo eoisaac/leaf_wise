@@ -9,10 +9,10 @@ export class EnvStatusModel extends Model {
     monitors: { type: 'belongs_to', key: 'monitor_id' },
   }
 
-  @field('temperature') temperature!: string
-  @field('humidity') humidity!: string
-  @field('soil_moisture') soilMoisture!: string
-  @field('light') light!: string
+  @field('temperature') temperature!: number
+  @field('humidity') humidity!: number
+  @field('soil_moisture') soilMoisture!: number
+  @field('light') light!: number
 
   @readonly @date('created_at') createdAt!: number
   @readonly @date('updated_at') updatedAt!: number
